@@ -429,27 +429,31 @@ function respaldarAPantallaAMemoria() {
     if (!memoriaGlobal[llaveID]) memoriaGlobal[llaveID] = {};
 
     const filas = document.querySelectorAll('#tabla-notas tbody tr');
+   const filas = document.querySelectorAll('#tabla-notas tbody tr');
     filas.forEach(fila => {
-        const dni = fila.getAttribute('data-dni');
-        if (!dni) return;
-        if (!memoriaGlobal[llaveID][dni]) memoriaGlobal[llaveID][dni] = {};
+        // Extraemos el nombre de la segunda celda (índice 1) como identificador principal
+        const nombreAlumno = fila.cells[1].innerText.trim();
+        if (!nombreAlumno) return;
+        
+        if (!memoriaGlobal[llaveID][nombreAlumno]) memoriaGlobal[llaveID][nombreAlumno] = {};
 
         const selNota = fila.querySelector('.select-nota');
-        if (selNota) memoriaGlobal[llaveID][dni].nota = selNota.value;
+        if (selNota) memoriaGlobal[llaveID][nombreAlumno].nota = selNota.value;
 
         fila.querySelectorAll('.select-obs-multiple').forEach(sel => {
-            memoriaGlobal[llaveID][dni][`sel_${sel.dataset.pos}`] = sel.value;
+            memoriaGlobal[llaveID][nombreAlumno][`sel_${sel.dataset.pos}`] = sel.value;
         });
 
         fila.querySelectorAll('.select-nota-cualitativa').forEach(sel => {
-            memoriaGlobal[llaveID][dni][sel.dataset.criterio] = sel.value;
+            memoriaGlobal[llaveID][nombreAlumno][sel.dataset.criterio] = sel.value;
         });
 
         const txtObs = fila.querySelector('.text-obs');
-        if (txtObs) memoriaGlobal[llaveID][dni].observacion = txtObs.value;
+        if (txtObs) memoriaGlobal[llaveID][nombreAlumno].observacion = txtObs.value;
     });
-    localStorage.setItem('asistenteNotasMemoria', JSON.stringify(memoriaGlobal));
-}
+    localStorage.setItem('asistenteNotasMemoria', JSON.stringify(memoriaGlobal)); [cite: 113]
+
+    
 
 function switchTab(tab) {
     // 1. Guardar cambios en memoria antes de movernos
@@ -585,37 +589,72 @@ function cargarAlumnos() {
     const materia = document.getElementById('materias').value || document.getElementById('areas-cualitativas').value;
     const periodo = document.getElementById('periodos').value || document.getElementById('periodos-cualitativas').value;
 
-    // Si falta algún filtro, limpiamos la tabla y salimos
     if (!turno || !curso || !materia || !periodo) {
         limpiarTabla();
         return;
     }
 
     const llaveID = `${turno}-${curso}-${materia}-${periodo}`;
-    const datosM = memoriaGlobal[llaveID] || {};
+    const datosM = memoriaGlobal[llaveID] || {}; // Aquí están los datos que bajaron de la nube
     const añoCurso = curso ? parseInt(curso.charAt(0)) : 0;
 
-    // 1. CONFIGURACIÓN DE ENCABEZADOS (TÍTULOS)
+    // 1. CONFIGURACIÓN DE ENCABEZADOS
     headerRow.innerHTML = '<th style="width: 50px;">N°</th><th>Apellido y Nombre</th>';
     
     if (tabActual === 'espacios') {
         headerRow.innerHTML += '<th>Nota</th>';
-        // Formato extendido para 4to/5to O cualquier año en Bimestre
         if (añoCurso >= 4 || periodo.includes("Bimestre")) {
             headerRow.innerHTML += '<th>Observaciones (Frase y Nota Personal)</th>';
         }
     } else {
-        // Formato para Cualitativas
         if (añoCurso <= 3 && !periodo.includes("Bimestre")) {
-            // Formato Cuatrimestral de 1ro a 3ro
             headerRow.innerHTML += '<th>Observaciones Cualitativas (3 Frases y Nota)</th>';
         } else {
-            // Formato de Criterios para 4to/5to O 1ro a 3ro en Bimestre
             criteriosCualitativos.forEach(crit => {
                 headerRow.innerHTML += `<th style="font-size: 0.75rem;">${crit}</th>`;
             });
         }
     }
+
+    // 2. RENDERIZADO DE ALUMNOS
+    tbody.innerHTML = '';
+    const listaAlumnos = baseDeDatosAlumnos[turno][curso] || [];
+
+    listaAlumnos.forEach((alumno, index) => {
+        // --- EL CAMBIO CLAVE ESTÁ AQUÍ ---
+        // Antes buscaba por alumno.dni, ahora buscamos por alumno.nombre
+        // porque así es como vienen los datos desde Google Sheets
+        const persistido = datosM[alumno.nombre] || {}; 
+        
+        const tr = document.createElement('tr');
+
+        // Celda N° y Nombre
+        let html = `<td>${index + 1}</td><td>${alumno.nombre}</td>`;
+
+        // Lógica de celdas según pestaña y año (Notas, Criterios, etc.)
+        if (tabActual === 'espacios') {
+            // Celda de Nota
+            html += `<td>${crearSelectNota(persistido.nota)}</td>`;
+            // Celda de Observaciones
+            if (añoCurso >= 4 || periodo.includes("Bimestre")) {
+                html += `<td>${crearBloqueObservaciones(persistido)}</td>`;
+            }
+        } else {
+            if (añoCurso <= 3 && !periodo.includes("Bimestre")) {
+                html += `<td>${crearBloqueObservacionesCualitativas(persistido)}</td>`;
+            } else {
+                // Celdas de Criterios (Interpreta, Relaciona, etc.)
+                criteriosCualitativos.forEach(crit => {
+                    const valorCrit = persistido[crit] || '-';
+                    html += `<td>${crearSelectCriterio(valorCrit)}</td>`;
+                });
+            }
+        }
+
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+    });
+}
 
     // 2. RENDERIZADO DE FILAS
     tbody.innerHTML = ''; 
