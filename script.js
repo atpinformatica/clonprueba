@@ -338,7 +338,7 @@ const frasesPorMateria = {
 
 let tabActual = 'espacios';
 let memoriaGlobal = JSON.parse(localStorage.getItem('asistenteNotasMemoria')) || {};
-const URL_WEB_APP = 'https://script.google.com/macros/s/AKfycbxYoEbDamqWf6awEXKniSiC0AITp1ir0rypbM5oENyq-fNp5SRMTh4xdC4yOl3dvm-7dQ/exec';
+const URL_WEB_APP = 'https://script.google.com/macros/s/AKfycbxnS9qNjshBrI81t9IzVON9E4EzZYLivWpM2Vb8tbWc600mzIBeAdER2EcnXj_v3SV9EA/exec';
 
 // 2. FUNCIONES DE ACCESO Y APOYO (Se mantienen igual)
 function verificarAcceso() {
