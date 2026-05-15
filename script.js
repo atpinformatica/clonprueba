@@ -17,7 +17,7 @@ const baseDeDatosAlumnos = {
                 { "dni": "12", "nombre": "ULLOA, Guadalupe Abigail" },
                 { "dni": "13", "nombre": "VALENZUELA, Ana Sofia" }],
 
-        "1 D": [{ "dni": "1", "nombre": "ALVEAR, Rut Isabel" },
+        "1 D": [{ "dni": "1", "nombre": "ALVEAR, Rut Isabella" },
                 { "dni": "2", "nombre": "ARAYA ALFARO, Mario Sebastian" },
                 { "dni": "3", "nombre": "ARAYA, Briana Martina" },
                 { "dni": "4", "nombre": "EPULLAN, Sol Alen" },
@@ -93,7 +93,7 @@ const baseDeDatosAlumnos = {
                 { "dni": "7", "nombre": "MORERO FERNANDEZ, Lorenzo Benjamín" },
                 { "dni": "8", "nombre": "NAVARRO, Jazmin Aixa" },
                 { "dni": "9", "nombre": "PAEZ CASTILLO, Valentina" },
-                { "dni": "10", "nombre": "PAVÓN, Nicolás" },
+                { "dni": "10", "nombre": "PAVÓN, Gael Nicolás" },
                 { "dni": "11", "nombre": "QUIÑINAO COLIPI, Valentina Daiana" },
                 { "dni": "12", "nombre": "TAPIA, Sofia Isabel" },
                 { "dni": "13", "nombre": "TORRES, Mia Florencia" },
@@ -128,16 +128,17 @@ const baseDeDatosAlumnos = {
                 { "dni": "5", "nombre": "GALMEZ ANCATRUZ, Paloma Solange" },
                 { "dni": "6", "nombre": "KREMER, Erwin Valentino" },
                 { "dni": "7", "nombre": "LOPEZ, Ignacio Marcelo Nicolas" },
-                { "dni": "8", "nombre": "MENA GALLARDO, Gabriel Adrian" },
-                { "dni": "9", "nombre": "MENA ROMERO, Alcira Malen" },
-                { "dni": "10", "nombre": "MOLINA, Priscila Yasmin" },
-                { "dni": "11", "nombre": "MORERO FERNANDEZ, Santino Gabriel" },
-                { "dni": "12", "nombre": "SANCHEZ, Luana Edith" },
-                { "dni": "13", "nombre": "SOTELO QUINCHAGUAL, Tiana Nahiana" },
-                { "dni": "14", "nombre": "TORRES, Victoria Ambar" },
-                { "dni": "15", "nombre": "TRAIPI, Naiara Abigail" },
-                { "dni": "16", "nombre": "VICENCIO ROSAS, Giuliana Fiorella" },
-                { "dni": "17", "nombre": "VILLARROEL, Martin Emanuel" }],
+                { "dni": "8", "nombre": "MAAIAN, Maslowski" },
+                { "dni": "9", "nombre": "MENA GALLARDO, Gabriel Adrian" },
+                { "dni": "10", "nombre": "MENA ROMERO, Alcira Malen" },
+                { "dni": "11", "nombre": "MOLINA, Priscila Yasmin" },
+                { "dni": "12", "nombre": "MORERO FERNANDEZ, Santino Gabriel" },
+                { "dni": "13", "nombre": "SANCHEZ, Luana Edith" },
+                { "dni": "14", "nombre": "SOTELO QUINCHAGUAL, Tiana Nahiana" },
+                { "dni": "15", "nombre": "TORRES, Victoria Ambar" },
+                { "dni": "16", "nombre": "TRAIPI, Naiara Abigail" },
+                { "dni": "17", "nombre": "VICENCIO ROSAS, Giuliana Fiorella" },
+                { "dni": "18", "nombre": "VILLARROEL, Martin Emanuel" }],
 
         "5 C": [ { "dni": "1", "nombre": "ALANIZ, Joselyn Denise Luana" },
                 { "dni": "2", "nombre": "ARIAS, Benjamin Tadeo" },
@@ -306,18 +307,18 @@ const baseDeDatosAlumnos = {
 
 const materiasPorCurso = {
     "1 A": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-        "1 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-        "1 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREATECNOLOGÍA"],
-        "1 D": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-        "1 E": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-        "2 A": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-        "2 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-        "2 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-        "2 D": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-    "3 A": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
-    "3 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
-    "3 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
-    "4 A": ["HISTORIA", "GEOGRAFÍA", "SOCIEDADES POLÍTICAS Y SUBJETIVIDADES", "LENGUA Y LITERATURA","ARTE","LENGUAS OTRAS","EDUCACIÓN FÍSICA INTEGRAL", "MATEMÁTICA","INFORMÁTICA","CS. BIOLÓGICAS","QUÍMICA","FÍSICA","ESTADOS, POLÍTICAS Y LEGISLACIONES","SISTEMA DE INFORMACIÓN CONTABLE","ECONOMÍAS","ORGANIZACIONES Y ADMINISTRACIONES","INTEGRACIÓN CURRICULAR: ANÁLISIS Y EVALUACIÓN DE PROYECTOS"],
+    "1 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
+    "1 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREATECNOLOGÍA"],
+    "1 D": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
+    "1 E": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
+    "2 A": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
+    "2 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
+    "2 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
+    "2 D": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
+    "3 A": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
+    "3 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
+    "3 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
+   "4 A": ["HISTORIA", "GEOGRAFÍA", "SOCIEDADES POLÍTICAS Y SUBJETIVIDADES", "LENGUA Y LITERATURA","ARTE","LENGUAS OTRAS","EDUCACIÓN FÍSICA INTEGRAL", "MATEMÁTICA","INFORMÁTICA","CS. BIOLÓGICAS","QUÍMICA","FÍSICA","ESTADOS, POLÍTICAS Y LEGISLACIONES","SISTEMA DE INFORMACIÓN CONTABLE","ECONOMÍAS","ORGANIZACIONES Y ADMINISTRACIONES","INTEGRACIÓN CURRICULAR: ANÁLISIS Y EVALUACIÓN DE PROYECTOS"],
     "4 B": ["HISTORIA", "GEOGRAFÍA", "SOCIEDADES, POLÍTICAS Y SUBJETIVIDADES", "LENGUA Y LITERATURA","ARTE","LENGUAS OTRAS","EDUCACIÓN FÍSICA INTEGRAL", "MATEMÁTICA","INFORMÁTICA","CS. BIOLÓGICAS","QUÍMICA","FÍSICA","ESTADOS, POLÍTICAS Y LEGISLACIONES","SISTEMA DE INFORMACIÓN CONTABLE","ECONOMÍAS","ORGANIZACIONES Y ADMINISTRACIONES","INTEGRACIÓN CURRICULAR: ANÁLISIS Y EVALUACIÓN DE PROYECTOS"],
     "4 C": ["HISTORIA", "GEOGRAFÍA", "SOCIEDADES, POLÍTICAS Y SUBJETIVIDADES", "LENGUA Y LITERATURA","ARTE", "LENGUAS OTRAS", "EDUCACIÓN FÍSICA INTEGRAL", "MATEMÁTICA","INFORMÁTICA", "CS. BIOLÓGICAS", "QUÍMICA", "FÍSICA", "FILOSOFÍA DE LAS CIENCIAS", "GEOPOLÍTICA", "ESTUDIOS SOCIALES Y CULTURALES", "GENEALOGÍAS DE LAS ARTES Y LAS ESTÉTICA", "COMUNICACIÓN, DISCURSO Y PRODUCCIÓN DE SENTIDOS", "PROYECTOS SOCIOCOMUNITARIOS"],
     "5 A": ["IDIOMA EXTRANJERO INGLÉS O FRANCÉS","MATEMÁTICA FINANCIERA","MERCEOLOGÍA","GEOGRAFÍA","DERECHO COMERCIAL","DERECHO ADMINISTRATIVO","ORGANIZACIÓN DEL COMERCIO Y DE LA EMPRESA","ECONOMÍA POLÍTICA","CONTABILIDAD","ESTENOGRAFÍA","MECANOGRAFÍA","EDUCACIÓN FÍSICA","INFORMÁTICA V"],
@@ -337,7 +338,7 @@ const frasesPorMateria = {
 
 let tabActual = 'espacios';
 let memoriaGlobal = JSON.parse(localStorage.getItem('asistenteNotasMemoria')) || {};
-const URL_WEB_APP = 'https://script.google.com/macros/s/AKfycbyhoBBLl995zFUqmSe7Yc7B9_ICWOr4OGKn3vwf0kjpXUDOXNZxuhb2UXLeYlu4onz6NQ/exec';
+const URL_WEB_APP = 'https://script.google.com/macros/s/AKfycbxYoEbDamqWf6awEXKniSiC0AITp1ir0rypbM5oENyq-fNp5SRMTh4xdC4yOl3dvm-7dQ/exec';
 
 // 2. FUNCIONES DE ACCESO Y APOYO (Se mantienen igual)
 function verificarAcceso() {
@@ -386,9 +387,9 @@ function actualizarMaterias() {
         "2 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
         "2 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
         "2 D": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA EDUCACIÓN SEXUAL INTEGRAL", "INTERÁREA TECNOLOGÍA"],
-        "3 A": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
-        "3 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
-        "3 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
+        "3 A": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
+        "3 B": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
+        "3 C": ["CIENCIAS SOCIALES, POLÍTICAS Y ECONÓMICAS", "LENGUAJES Y PRODUCCIÓN CULTURAL", "CIENCIAS NATURALES", "MATEMÁTICA E INFORMÁTICA", "EDUCACIÓN FÍSICA INTEGRAL", "INTERÁREA TECNOLOGÍA", "COMUNICACIÓN Y MEDIOS", "INVESTIGACIÓN DE LAS ORIENTACIONES"],
         "4 A": ["HISTORIA", "GEOGRAFÍA", "SOCIEDADES POLÍTICAS Y SUBJETIVIDADES", "LENGUA Y LITERATURA","ARTE","LENGUAS OTRAS","EDUCACIÓN FÍSICA INTEGRAL", "MATEMÁTICA","INFORMÁTICA","CS. BIOLÓGICAS","QUÍMICA","FÍSICA","ESTADOS, POLÍTICAS Y LEGISLACIONES","SISTEMA DE INFORMACIÓN CONTABLE","ECONOMÍAS","ORGANIZACIONES Y ADMINISTRACIONES","INTEGRACIÓN CURRICULAR: ANÁLISIS Y EVALUACIÓN DE PROYECTOS"],
         "4 B": ["HISTORIA", "GEOGRAFÍA", "SOCIEDADES, POLÍTICAS Y SUBJETIVIDADES", "LENGUA Y LITERATURA","ARTE","LENGUAS OTRAS","EDUCACIÓN FÍSICA INTEGRAL", "MATEMÁTICA","INFORMÁTICA","CS. BIOLÓGICAS","QUÍMICA","FÍSICA","ESTADOS, POLÍTICAS Y LEGISLACIONES","SISTEMA DE INFORMACIÓN CONTABLE","ECONOMÍAS","ORGANIZACIONES Y ADMINISTRACIONES","INTEGRACIÓN CURRICULAR: ANÁLISIS Y EVALUACIÓN DE PROYECTOS"],
         "4 C": ["HISTORIA", "GEOGRAFÍA", "SOCIEDADES, POLÍTICAS Y SUBJETIVIDADES", "LENGUA Y LITERATURA","ARTE", "LENGUAS OTRAS", "EDUCACIÓN FÍSICA INTEGRAL", "MATEMÁTICA","INFORMÁTICA", "CS. BIOLÓGICAS", "QUÍMICA", "FÍSICA", "FILOSOFÍA DE LAS CIENCIAS", "GEOPOLÍTICA", "ESTUDIOS SOCIALES Y CULTURALES", "GENEALOGÍAS DE LAS ARTES Y LAS ESTÉTICA", "COMUNICACIÓN, DISCURSO Y PRODUCCIÓN DE SENTIDOS", "PROYECTOS SOCIOCOMUNITARIOS"],
@@ -429,31 +430,27 @@ function respaldarAPantallaAMemoria() {
     if (!memoriaGlobal[llaveID]) memoriaGlobal[llaveID] = {};
 
     const filas = document.querySelectorAll('#tabla-notas tbody tr');
-   const filas = document.querySelectorAll('#tabla-notas tbody tr');
     filas.forEach(fila => {
-        // Extraemos el nombre de la segunda celda (índice 1) como identificador principal
-        const nombreAlumno = fila.cells[1].innerText.trim();
-        if (!nombreAlumno) return;
-        
-        if (!memoriaGlobal[llaveID][nombreAlumno]) memoriaGlobal[llaveID][nombreAlumno] = {};
+        const dni = fila.getAttribute('data-dni');
+        if (!dni) return;
+        if (!memoriaGlobal[llaveID][dni]) memoriaGlobal[llaveID][dni] = {};
 
         const selNota = fila.querySelector('.select-nota');
-        if (selNota) memoriaGlobal[llaveID][nombreAlumno].nota = selNota.value;
+        if (selNota) memoriaGlobal[llaveID][dni].nota = selNota.value;
 
         fila.querySelectorAll('.select-obs-multiple').forEach(sel => {
-            memoriaGlobal[llaveID][nombreAlumno][`sel_${sel.dataset.pos}`] = sel.value;
+            memoriaGlobal[llaveID][dni][`sel_${sel.dataset.pos}`] = sel.value;
         });
 
         fila.querySelectorAll('.select-nota-cualitativa').forEach(sel => {
-            memoriaGlobal[llaveID][nombreAlumno][sel.dataset.criterio] = sel.value;
+            memoriaGlobal[llaveID][dni][sel.dataset.criterio] = sel.value;
         });
 
         const txtObs = fila.querySelector('.text-obs');
-        if (txtObs) memoriaGlobal[llaveID][nombreAlumno].observacion = txtObs.value;
+        if (txtObs) memoriaGlobal[llaveID][dni].observacion = txtObs.value;
     });
-    localStorage.setItem('asistenteNotasMemoria', JSON.stringify(memoriaGlobal)); [cite: 113]
-
-    
+    localStorage.setItem('asistenteNotasMemoria', JSON.stringify(memoriaGlobal));
+}
 
 function switchTab(tab) {
     // 1. Guardar cambios en memoria antes de movernos
@@ -505,37 +502,27 @@ function switchTab(tab) {
     validarYFiltrar();
 }
 
-async function validarYFiltrar() {
+function validarYFiltrar() {
     const turno = document.getElementById('turnos').value;
     const curso = document.getElementById('cursos').value;
     let filtrosCompletos = false;
-    let matUArea = "";
-    let perUArea = "";
-
+    
     if (tabActual === 'espacios') {
-        matUArea = document.getElementById('materias').value;
-        perUArea = document.getElementById('periodos').value;
-        if (turno && curso && matUArea && perUArea) filtrosCompletos = true;
+        const mat = document.getElementById('materias').value;
+        const per = document.getElementById('periodos').value;
+        if (turno && curso && mat && per) filtrosCompletos = true;
     } else {
-        matUArea = document.getElementById('areas-cualitativas').value;
-        perUArea = document.getElementById('periodos-cualitativas').value;
-        if (turno && curso && matUArea && perUArea) filtrosCompletos = true;
+        const area = document.getElementById('areas-cualitativas').value;
+        const perC = document.getElementById('periodos-cualitativas').value;
+        if (turno && curso && area && perC) filtrosCompletos = true;
     }
 
     if (filtrosCompletos) {
-        // Mostramos un aviso visual de que estamos buscando en la nube
-        document.querySelector('#tabla-notas tbody').innerHTML = '<tr><td colspan="20" style="text-align:center; padding:20px;">Sincronizando con la nube...</td></tr>';
-        
-        // ESPERAMOS a que la nube responda antes de seguir
-        await importarDatosDesdeNube(); 
-        
-        // Una vez que importarDatosDesdeNube termina y actualiza memoriaGlobal, cargamos
-        cargarAlumnos();
+        cargarAlumnos(); 
     } else {
         limpiarTabla();
     }
 }
- 
 
 function actualizarSelectorCursos() {
     const turnoSeleccionado = document.getElementById('turnos').value;
@@ -554,32 +541,6 @@ function actualizarSelectorCursos() {
     validarYFiltrar();
 }
 
-//******************************************************************************** */
-
-async function importarDatosDesdeNube() {
-    const turno = document.getElementById('turnos').value;
-    const curso = document.getElementById('cursos').value;
-    const materia = document.getElementById('materias').value || document.getElementById('areas-cualitativas').value;
-    const periodo = document.getElementById('periodos').value || document.getElementById('periodos-cualitativas').value;
-
-    const urlConsulta = `${URL_WEB_APP}?turno=${encodeURIComponent(turno)}&curso=${encodeURIComponent(curso)}&materia=${encodeURIComponent(materia)}&periodo=${encodeURIComponent(periodo)}`;
-
-    try {
-        const respuesta = await fetch(urlConsulta);
-        const datosNube = await respuesta.json();
-        const llave = `${turno}-${curso}-${materia}-${periodo}`;
-
-        // Si la nube devolvió datos, actualizamos la memoria local del dispositivo actual
-        if (Object.keys(datosNube).length > 0) {
-            memoriaGlobal[llave] = datosNube;
-            localStorage.setItem('asistenteNotasMemoria', JSON.stringify(memoriaGlobal));
-            console.log("Sincronización exitosa para: " + llave);
-        }
-    } catch (error) {
-        console.error("Error al conectar con la nube:", error);
-    }
-}
-
 // 3. CARGAR ALUMNOS (AJUSTADO SEGÚN TU SOLICITUD)
 function cargarAlumnos() {
     const tbody = document.querySelector('#tabla-notas tbody');
@@ -589,72 +550,37 @@ function cargarAlumnos() {
     const materia = document.getElementById('materias').value || document.getElementById('areas-cualitativas').value;
     const periodo = document.getElementById('periodos').value || document.getElementById('periodos-cualitativas').value;
 
+    // Si falta algún filtro, limpiamos la tabla y salimos
     if (!turno || !curso || !materia || !periodo) {
         limpiarTabla();
         return;
     }
 
     const llaveID = `${turno}-${curso}-${materia}-${periodo}`;
-    const datosM = memoriaGlobal[llaveID] || {}; // Aquí están los datos que bajaron de la nube
+    const datosM = memoriaGlobal[llaveID] || {};
     const añoCurso = curso ? parseInt(curso.charAt(0)) : 0;
 
-    // 1. CONFIGURACIÓN DE ENCABEZADOS
+    // 1. CONFIGURACIÓN DE ENCABEZADOS (TÍTULOS)
     headerRow.innerHTML = '<th style="width: 50px;">N°</th><th>Apellido y Nombre</th>';
     
     if (tabActual === 'espacios') {
         headerRow.innerHTML += '<th>Nota</th>';
+        // Formato extendido para 4to/5to O cualquier año en Bimestre
         if (añoCurso >= 4 || periodo.includes("Bimestre")) {
             headerRow.innerHTML += '<th>Observaciones (Frase y Nota Personal)</th>';
         }
     } else {
+        // Formato para Cualitativas
         if (añoCurso <= 3 && !periodo.includes("Bimestre")) {
+            // Formato Cuatrimestral de 1ro a 3ro
             headerRow.innerHTML += '<th>Observaciones Cualitativas (3 Frases y Nota)</th>';
         } else {
+            // Formato de Criterios para 4to/5to O 1ro a 3ro en Bimestre
             criteriosCualitativos.forEach(crit => {
                 headerRow.innerHTML += `<th style="font-size: 0.75rem;">${crit}</th>`;
             });
         }
     }
-
-    // 2. RENDERIZADO DE ALUMNOS
-    tbody.innerHTML = '';
-    const listaAlumnos = baseDeDatosAlumnos[turno][curso] || [];
-
-    listaAlumnos.forEach((alumno, index) => {
-        // --- EL CAMBIO CLAVE ESTÁ AQUÍ ---
-        // Antes buscaba por alumno.dni, ahora buscamos por alumno.nombre
-        // porque así es como vienen los datos desde Google Sheets
-        const persistido = datosM[alumno.nombre] || {}; 
-        
-        const tr = document.createElement('tr');
-
-        // Celda N° y Nombre
-        let html = `<td>${index + 1}</td><td>${alumno.nombre}</td>`;
-
-        // Lógica de celdas según pestaña y año (Notas, Criterios, etc.)
-        if (tabActual === 'espacios') {
-            // Celda de Nota
-            html += `<td>${crearSelectNota(persistido.nota)}</td>`;
-            // Celda de Observaciones
-            if (añoCurso >= 4 || periodo.includes("Bimestre")) {
-                html += `<td>${crearBloqueObservaciones(persistido)}</td>`;
-            }
-        } else {
-            if (añoCurso <= 3 && !periodo.includes("Bimestre")) {
-                html += `<td>${crearBloqueObservacionesCualitativas(persistido)}</td>`;
-            } else {
-                // Celdas de Criterios (Interpreta, Relaciona, etc.)
-                criteriosCualitativos.forEach(crit => {
-                    const valorCrit = persistido[crit] || '-';
-                    html += `<td>${crearSelectCriterio(valorCrit)}</td>`;
-                });
-            }
-        }
-
-        tr.innerHTML = html;
-        tbody.appendChild(tr);
-    });
-}
 
     // 2. RENDERIZADO DE FILAS
     tbody.innerHTML = ''; 
