@@ -342,9 +342,23 @@ let datosSheetsCargados = false; // Bandera para saber si ya terminó la carga i
 const URL_WEB_APP = 'https://script.google.com/macros/s/AKfycbxnS9qNjshBrI81t9IzVON9E4EzZYLivWpM2Vb8tbWc600mzIBeAdER2EcnXj_v3SV9EA/exec';
 
 /**
+ * Normaliza un nombre para comparación robusta:
+ * quita espacios extra, pasa a mayúsculas y elimina tildes.
+ * Así "CASTRO GORJÓN, Isabella" == "Castro Gorjon,  Isabella" == true
+ */
+function normalizarNombre(str) {
+    return str
+        .trim()
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // elimina tildes
+        .replace(/\s+/g, " ");           // colapsa espacios múltiples
+}
+
+/**
  * Carga todos los datos guardados desde Google Sheets al iniciar la app.
- * Los convierte al mismo formato que usaba localStorage, así el resto del
- * código no necesita cambios.
+ * Usa el nombre normalizado como clave de búsqueda para evitar fallos
+ * por tildes, espacios o mayúsculas distintas entre Sheets y la base local.
  */
 async function cargarDesdeSheetsAlIniciar() {
     const tbody = document.querySelector('#tabla-notas tbody');
@@ -358,49 +372,61 @@ async function cargarDesdeSheetsAlIniciar() {
 
         if (filas.error) throw new Error(filas.error);
 
+        let cargados = 0;
+        let noEncontrados = [];
+
         filas.forEach(item => {
-            // Reconstruimos la misma "llave" que usa el resto de la app
-            // El periodo guardado en Sheets viene como "1er Cuatrimestre" / "2do Cuatrimestre"
-            // lo normalizamos al formato interno ("1" / "2" / "1_Bimestre" / etc.)
+            // Normalizar periodo: Sheets guarda "1er Cuatrimestre", la app usa "1"
             let periodoInterno = item.periodo;
             if (item.periodo === "1er Cuatrimestre") periodoInterno = "1";
-            if (item.periodo === "2do Cuatrimestre") periodoInterno = "2";
-            // Los bimestres ya vienen con el nombre correcto desde Sheets
+            if (item.periodo === "2do Cuatrimestre")  periodoInterno = "2";
 
             const llave = `${item.turno}-${item.curso}-${item.materia}-${periodoInterno}`;
 
-            // Buscamos el DNI del alumno en la base de datos local
+            // Buscar el alumno por nombre normalizado (tolerante a tildes y espacios)
             const turnoData = baseDeDatosAlumnos[item.turno];
             if (!turnoData || !turnoData[item.curso]) return;
-            const alumno = turnoData[item.curso].find(a => a.nombre === item.nombre);
-            if (!alumno) return;
+
+            const nombreBuscado = normalizarNombre(item.nombre);
+            const alumno = turnoData[item.curso].find(
+                a => normalizarNombre(a.nombre) === nombreBuscado
+            );
+
+            if (!alumno) {
+                noEncontrados.push(`"${item.nombre}" (${item.curso} / ${item.turno})`);
+                return;
+            }
 
             if (!memoriaGlobal[llave]) memoriaGlobal[llave] = {};
             memoriaGlobal[llave][alumno.dni] = {
-                nota:             item.nota            || "",
-                sel_1:            item.obs1            || "",
-                sel_2:            item.obs2            || "",
-                sel_3:            item.obs3            || "",
-                observacion:      item.obs4            || "",
-                "Interpreta":     item.interpreta      || "-",
-                "Relaciona":      item.relaciona       || "-",
-                "Aplica":         item.aplica          || "-",
-                "Participación":  item.participacion   || "-",
-                "Autonomía":      item.autonomia       || "-",
+                nota:                  item.nota             || "",
+                sel_1:                 item.obs1             || "",
+                sel_2:                 item.obs2             || "",
+                sel_3:                 item.obs3             || "",
+                observacion:           item.obs4             || "",
+                "Interpreta":          item.interpreta       || "-",
+                "Relaciona":           item.relaciona        || "-",
+                "Aplica":              item.aplica           || "-",
+                "Participación":       item.participacion    || "-",
+                "Autonomía":           item.autonomia        || "-",
                 "Realización de TP":   item.realizacion_tp   || "-",
                 "Cumplimiento AEC":    item.cumplimiento_aec || "-"
             };
+            cargados++;
         });
 
         datosSheetsCargados = true;
-        console.log(`✅ ${filas.length} registros cargados desde Sheets.`);
+        console.log(`✅ ${cargados} registros cargados desde Sheets.`);
+        if (noEncontrados.length > 0) {
+            console.warn("⚠️ Nombres en Sheets que no coinciden con la base local:", noEncontrados);
+        }
 
     } catch (err) {
         console.warn("⚠️ No se pudo cargar desde Sheets, se usará memoria vacía.", err);
-        datosSheetsCargados = true; // Seguimos igual, solo sin datos previos
+        datosSheetsCargados = true;
     }
 
-    // Limpiamos el mensaje de carga y dejamos la tabla en su estado inicial
+    // Restaurar mensaje inicial de la tabla
     tbody.innerHTML = `<tr><td colspan="10" style="padding:30px;color:#777;text-align:center;">
         <i class="fas fa-filter"></i> Seleccione todos los filtros para visualizar la lista de alumnos
     </td></tr>`;
