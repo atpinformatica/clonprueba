@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPEM 32 | Autogestión - Réplica Profesional</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0056b3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="login-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a2a40; z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white;">
+        <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; width: 350px;">
+            <i class="fas fa-user-circle" style="font-size: 3rem; color: #007bff; margin-bottom: 20px;"></i>
+            <h2 style="color: #333; margin-bottom: 10px;">S.I.A CPEM 32</h2>
+            <p style="color: #666; margin-bottom: 20px; font-size: 0.9rem;">Ingrese sus credenciales institucionales</p>
+            
+            <input type="email" id="user-email" placeholder="nombre.apellido@cpem32.edu.ar" 
+                style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 1rem; color: #333;">
+            
+            <input type="password" id="pass-input" placeholder="Contraseña" 
+                style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 1rem; color: #333;">
+            
+            <button type="button" onclick="verificarAcceso()" style="width: 100%; background: #007bff; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                Iniciar Sesión
+            </button>
+            
+            <p id="login-error" style="color: #e74c3c; font-size: 0.85rem; margin-top: 15px; display: none; font-weight: bold;">
+                Usuario o contraseña incorrectos
+            </p>
+        </div>
+    </div>
+
+    <main class="content full-width">
+        <header class="main-header">
+            <div class="header-info">
+                <h2>Agente: Profesores</h2>
+                <p> Centros Provinciales de Enseñanza Media. CPEM 32</p>
+            </div>
+        </header>
+
+        <div class="tabs-container">
+            <button id="tab-espacios" class="tab-btn active" onclick="switchTab('espacios')">Espacios Curriculares</button>
+            <button id="tab-cualitativas" class="tab-btn" onclick="switchTab('cualitativas')">Categorías Cualitativas</button>
+        </div>
+
+        <section class="filter-card white-bg">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Turnos</label>
+                    <select id="turnos">
+                        <option value="">Seleccione Turno</option>
+                        <option value="MAÑANA">MAÑANA</option>
+                        <option value="TARDE">TARDE</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Cursos</label>
+                    <select id="cursos" onchange="actualizarMaterias()">
+                        <option value="">Seleccione Curso</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="filter-card blue-gradient">
+            <div id="filtros-espacios" class="tab-panel active">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Materias</label>
+                        <select id="materias">
+                            <option value="">Seleccione Curso primero</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Períodos</label>
+                        <select id="periodos" onchange="cargarAlumnos()">
+                            <option value="">Seleccione Período</option>
+                            <option value="1_Bimestre">1er_Bimestre</option> 
+                            <option value="2_Bimestre">2do_Bimestre</option> 
+                            <option value="1">1er_Cuatrimestre</option>
+                            <option value="2">2do_Cuatrimestre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="filtros-cualitativas" class="tab-panel">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Áreas</label>
+                        <select id="areas-cualitativas">
+                            <option value="">Seleccione Área</option>
+                            <option value="COMUNICACIÓN Y LENGUAJE">Apropiación de conocimientos y saberes / Responsabilidad de su proceso de aprendizaje</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Períodos</label>
+                        <select id="periodos-cualitativas" onchange="cargarAlumnos()">
+                            <option value="">Seleccione Período</option>
+                            <option value="1_Bimestre">1er_Bimestre</option> 
+                            <option value="2_Bimestre">2do_Bimestre</option> 
+                            <option value="1">1er_Cuatrimestre</option>
+                            <option value="2">2do_Cuatrimestre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-container">
+            <table id="tabla-notas">
+                <thead>
+                    <tr id="header-row"></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="10" style="padding: 30px; color: #777; text-align: center;">
+                            <i class="fas fa-filter"></i> Seleccione todos los filtros para visualizar la lista de alumnos
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="actions">
+            <button id="btnGuardar" class="btn-save">
+                <i class="fas fa-cloud-upload-alt"></i> Guardar Datos
+            </button>
+        </div>
+
+        <div class="danger-zone" style="margin-top: 100px; padding: 20px; border-top: 1px solid #eee; text-align: center;">
+            <p style="font-size: 0.8rem; color: #999; margin-bottom: 10px;">Zona de mantenimiento</p>
+           <button id="btnLimpiar" class="btn-clear-minimal" onclick="borrarMemoriaConClave()" disabled>          
+                <i class="fas fa-trash-alt"></i> Borrar memoria local del navegador
+            </button>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+<footer>
+    <p><small>&copy; 2026 Sisa Franco Sebastian (ATP). Todos los derechos reservados.</small></p>
+</footer>
