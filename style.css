@@ -1,0 +1,160 @@
+:root {
+    --azul-oscuro: #0056b3;
+    --celeste-sime: #00a8e8;
+    --verde-tabla: #b5d527; 
+    --gris-fondo: #f4f7f9;
+    --gris-borde: #ddd;
+    --rojo-peligro: #e74c3c; /* Nuevo color para limpieza */
+}
+
+/* Ajuste general para ocupar toda la pantalla sin sidebar */
+body { 
+    background-color: var(--gris-fondo); 
+    margin: 0; 
+    padding: 0;
+    font-family: sans-serif; 
+    display: block; 
+}
+
+/* Contenido Principal al 100% */
+.content { 
+    width: 100%; 
+    padding: 20px; 
+    box-sizing: border-box;
+}
+
+.main-header { 
+    background: var(--azul-oscuro); 
+    color: white; 
+    padding: 20px; 
+    border-radius: 8px; 
+    margin-bottom: 20px; 
+}
+
+/* TABS */
+.tabs-container { display: flex; gap: 5px; }
+.tab-btn { 
+    padding: 12px 20px; border: none; background: #d1ecf1; 
+    color: #0c5460; cursor: pointer; border-radius: 8px 8px 0 0; font-weight: bold;
+    transition: background 0.3s;
+}
+.tab-btn.active { background: white; color: var(--azul-oscuro); border: 1px solid var(--gris-borde); border-bottom: none; }
+
+/* FILTROS */
+.filter-card { padding: 20px; border-radius: 0 8px 8px 8px; margin-bottom: 15px; border: 1px solid var(--gris-borde); }
+.white-bg { background: white; }
+.blue-gradient { 
+    background: linear-gradient(to bottom, var(--celeste-sime), #008fcc); 
+    color: white; border: none; margin-top: -1px;
+}
+.filter-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+.filter-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85rem; }
+.filter-group select { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--gris-borde); background: white; }
+
+/* TABLA ADAPTATIVA */
+.table-container { 
+    background: white; 
+    border-radius: 8px; 
+    overflow-x: auto; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+    margin-bottom: 20px;
+}
+
+table { width: 100%; border-collapse: collapse; min-width: 800px; }
+
+th { 
+    background: var(--celeste-sime); 
+    color: white; 
+    padding: 12px 8px; 
+    text-align: center; 
+    font-size: 13px;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Encabezados verdes para criterios cualitativos */
+#tabla-notas thead tr#header-row th:nth-child(n+3) {
+    background-color: var(--verde-tabla);
+    color: #333; 
+}
+
+td { 
+    padding: 10px; 
+    border: 1px solid #eee; 
+    text-align: center; 
+}
+
+/* INPUTS Y SELECTS */
+.nota-input {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid var(--gris-borde);
+    border-radius: 4px;
+    font-size: 12px;
+    background-color: white;
+}
+
+.select-nota-cualitativa {
+    border: 1px solid var(--verde-tabla); 
+}
+
+/* OBSERVACIONES */
+.obs-container { display: flex; flex-direction: column; gap: 5px; padding: 5px; }
+.select-obs { width: 100%; font-size: 0.85rem; background-color: #f9f9f9; }
+.text-obs { 
+    width: 100%; min-height: 50px; resize: vertical; font-size: 0.85rem; padding: 8px; 
+    box-sizing: border-box; border: 1px solid var(--gris-borde); border-radius: 4px;
+}
+
+/* CONTENEDOR DE ACCIONES */
+.actions { 
+    display: flex; 
+    justify-content: flex-end; 
+    gap: 15px; 
+    margin-top: 20px; 
+    padding-bottom: 40px;
+}
+
+/* BOTONES PRINCIPALES */
+.btn-save, .btn-clear {
+    padding: 15px 30px; 
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-weight: bold;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.1s, background 0.3s;
+}
+
+.btn-save:active, .btn-clear:active { transform: scale(0.98); }
+
+/* ESTILO GUARDAR */
+.btn-save { 
+    background: var(--azul-oscuro); 
+    color: white; 
+}
+.btn-save:hover { background: #004494; }
+
+/* ESTILO LIMPIAR */
+.btn-clear { 
+    background: white; 
+    color: var(--rojo-peligro); 
+    border: 2px solid var(--rojo-peligro);
+}
+.btn-clear:hover { 
+    background: var(--rojo-peligro); 
+    color: white; 
+}
+
+/* UTILIDADES */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.sidebar { display: none; }
+
+#pass-input:focus {
+    outline: none;
+    border-color: var(--celeste-sime);
+    box-shadow: 0 0 5px rgba(0, 168, 232, 0.3);
+}
