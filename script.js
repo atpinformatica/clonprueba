@@ -1,6 +1,7 @@
-﻿// 1. BASE DE DATOS Y VARIABLES (Se mantienen igual)
+// 1. BASE DE DATOS Y VARIABLES (Se mantienen igual)
 const CLAVE_ACCESO = "1234"; 
 const escalaConceptos = ["Excelente", "Muy Bien", "Bien", "Regular", "Ausente", "Sin Calificar"];
+var usuarioLogueado = ""; // <-- NUEVA: Guarda el email del profesor activo
 const baseDeDatosAlumnos = {
     "MAÑANA": {
         "1 A": [{ "dni": "1", "nombre": "CASTRO GORJÓN, Isabella" },
@@ -446,6 +447,10 @@ function verificarAcceso() {
 
     if (formatoEmail.test(emailInput) && passInput === CLAVE_ACCESO) {
         sessionStorage.setItem('autenticado', 'true');
+        
+        // INTERCEPCIÓN CAMBIO: Guardamos el correo antes de cerrar el overlay de login
+        usuarioLogueado = emailInput; 
+        
         overlay.style.display = 'none';
     } else {
         errorMsg.style.display = 'block';
@@ -752,6 +757,11 @@ function cargarAlumnos() {
         tr.innerHTML = html;
         tbody.appendChild(tr);
     });
+
+    // ==========================================
+    // CAMBIO CLAVE AQUI: Re-evalúa y bloquea los elementos recién creados en milisegundos
+    // ==========================================
+    comprobarPermisosProfesor(); 
 }
 
 // 4. EVENTOS
@@ -854,4 +864,54 @@ async function guardarEnGoogleSheets() {
     
     btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Guardar Datos'; 
     btn.disabled = false;
+}
+
+
+
+//******Nueva FUNCION****// */
+
+/**
+ * Evalúa los permisos del docente sobre el espacio seleccionado.
+ * Bloquea la edición si pertenece a otra asignatura, manteniendo la visualización.
+ */
+function comprobarPermisosProfesor() {
+    var materiaSeleccionada = document.getElementById("materias").value;
+
+    // Si aún no se seleccionó ninguna materia, salimos del proceso
+    if (!materiaSeleccionada) return;
+
+    // Conexión con el Backend centralizado en Google Apps Script
+    google.script.run
+        .withSuccessHandler(function(tienePermiso) {
+            // Buscamos dinámicamente todos los inputs, selects y textareas dentro de la tabla
+            var inputsTabla = document.querySelectorAll("#tabla-notas input, #tabla-notas select, #tabla-notas textarea");
+            var btnGuardar = document.getElementById("btnGuardar");
+
+            if (tienePermiso) {
+                // --- MODO EDICIÓN ACTIVADO (Es su materia asignada) ---
+                inputsTabla.forEach(campo => {
+                    campo.removeAttribute("disabled");
+                    campo.style.backgroundColor = ""; // Restaura color original
+                });
+                if (btnGuardar) {
+                    btnGuardar.removeAttribute("disabled");
+                    btnGuardar.style.opacity = "1";
+                    btnGuardar.style.cursor = "pointer";
+                }
+                console.log("🔓 Permiso de escritura concedido para: " + materiaSeleccionada);
+            } else {
+                // --- MODO SOLO LECTURA ACTIVADO (Pertenece a otro colega) ---
+                inputsTabla.forEach(campo => {
+                    campo.setAttribute("disabled", "true");
+                    campo.style.backgroundColor = "#e9ecef"; // Efecto visual gris de bloqueo
+                });
+                if (btnGuardar) {
+                    btnGuardar.setAttribute("disabled", "true");
+                    btnGuardar.style.opacity = "0.5"; // Desactiva visualmente el botón
+                    btnGuardar.style.cursor = "not-allowed";
+                }
+                console.warn("🔒 Modo Solo Lectura aplicado a la materia: " + materiaSeleccionada);
+            }
+        })
+        .verificarPermisoEdicion(usuarioLogueado, materiaSeleccionada);
 }
