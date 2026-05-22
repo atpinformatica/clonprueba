@@ -91,12 +91,13 @@
             <div id="filtros-cualitativas" class="tab-panel">
                 <div class="filter-row">
                     <div class="filter-group">
-                        <label>Áreas</label>
-                        <select id="areas-cualitativas">
-                            <option value="">Seleccione Área</option>
-                            <option value="COMUNICACIÓN Y LENGUAJE">Apropiación de conocimientos y saberes / Responsabilidad de su proceso de aprendizaje</option>
+                        <label>Materias</label>
+                        <select id="materias" onchange="comprobarPermisosProfesor()">
+                            <option value="">Seleccione Curso primero</option>
                         </select>
                     </div>
+
+                
                     <div class="filter-group">
                         <label>Períodos</label>
                         <select id="periodos-cualitativas" onchange="cargarAlumnos()">
