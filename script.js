@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // SIA CPEM 32 - SCRIPT PRINCIPAL CON AUTENTICACIÓN Y ROLES
 // ============================================================
 
@@ -1894,6 +1894,15 @@ async function generarPDFComprobante() {
     const fechaStr = ahora.toLocaleDateString('es-AR');
     const horaStr = ahora.toLocaleTimeString('es-AR');
     
+    // Formatear nombre del periodo para mostrar
+    let nombrePeriodoMostrar = periodo;
+    if (periodo === "1") nombrePeriodoMostrar = "1er Cuatrimestre";
+    else if (periodo === "2") nombrePeriodoMostrar = "2do Cuatrimestre";
+    else if (periodo === "1_Bimestre") nombrePeriodoMostrar = "1er Bimestre";
+    else if (periodo === "2_Bimestre") nombrePeriodoMostrar = "2do Bimestre";
+    else if (periodo === "3_Bimestre") nombrePeriodoMostrar = "3er Bimestre";
+    else if (periodo === "4_Bimestre") nombrePeriodoMostrar = "4to Bimestre";
+    
     let html = `
     <!DOCTYPE html>
     <html lang="es">
@@ -1947,7 +1956,7 @@ async function generarPDFComprobante() {
                 <strong>Materia:</strong> ${materia}
             </div>
             <div class="info-box">
-                <strong>Periodo:</strong> ${periodo}<br>
+                <strong>Periodo:</strong> ${nombrePeriodoMostrar}<br>
                 <strong>Docente:</strong> ${sesionActual ? sesionActual.correo : ''}<br>
                 <strong>Fecha:</strong> ${fechaStr} ${horaStr}
             </div>
