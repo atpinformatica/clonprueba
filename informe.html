@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe Cuatrimestral 2026 — CPEM N° 32</title>
+  <style>
+    :root {
+      --violeta-oscuro: #6d3b8e;
+      --violeta-medio:  #8e5aaf;
+      --lila-area:      #c9a8dc;
+      --lila-mat:       #efe8f5;
+      --lila-nota:      #ddd0ec;
+      --lila-cab:       #f3ecfa;
+      --borde:          #b39cc8;
+      --texto-area:     #3d1f5a;
+    }
+
+    @page { size: A4 landscape; margin: 8mm; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      /* Forzar impresión de fondos en todos los navegadores */
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 8.5pt;
+      color: #222;
+      background: white;
+    }
+
+    /* ── PÁGINA ── */
+    .pagina {
+      page-break-after: always;
+      padding: 2px 0 8px 0;
+    }
+    .pagina:last-child { page-break-after: avoid; }
+
+    /* ── CABECERA ── */
+    .cabecera {
+      display: grid;
+      grid-template-columns: 155px 1fr 68px 210px;
+      border: 1.5px solid var(--borde);
+      margin-bottom: 5px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .cab-cpem {
+      background-color: var(--violeta-oscuro) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color: white !important;
+      text-align: center;
+      padding: 7px 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .cab-cpem .titulo    { font-size: 11pt; font-weight: 700; }
+    .cab-cpem .subtitulo { font-size: 7.5pt; font-weight: 400; margin-top: 2px; opacity: .9; }
+
+    .cab-nombre {
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      font-size: 13.5pt;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      border-left: 1.5px solid var(--borde);
+      border-right: 1.5px solid var(--borde);
+      background-color: var(--lila-cab) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .cab-curso {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14pt;
+      font-weight: 700;
+      background-color: var(--lila-nota) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      border-right: 1.5px solid var(--borde);
+      color: var(--texto-area);
+    }
+    .cab-prece {
+      padding: 5px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: var(--lila-cab) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .cab-prece .label { font-size: 7pt; color: #777; }
+    .cab-prece .valor { font-size: 9.5pt; font-weight: 700; color: var(--texto-area); }
+
+    /* ── TABLA ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1.5px solid var(--borde);
+    }
+    th, td {
+      border: 1px solid var(--borde);
+      padding: 3px 5px;
+      vertical-align: middle;
+    }
+
+    .th-main {
+      background-color: var(--violeta-oscuro) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color: white !important;
+      font-size: 7.5pt;
+      font-weight: 600;
+      text-align: center;
+    }
+    .th-sub {
+      background-color: var(--violeta-medio) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color: white !important;
+      font-size: 7pt;
+      font-weight: 600;
+      text-align: center;
+    }
+    .td-area {
+      background-color: var(--lila-area) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      font-weight: 700;
+      font-size: 7.5pt;
+      text-align: center;
+      color: var(--texto-area);
+      width: 130px;
+    }
+    .td-mat {
+      background-color: var(--lila-mat) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      font-size: 8pt;
+    }
+    .td-val       { text-align: center; font-size: 8pt; color: #888; }
+    .td-val.tiene-valor { color: #222; font-weight: 600; }
+    .td-nota {
+      text-align: center;
+      font-weight: 700;
+      font-size: 9pt;
+      background-color: var(--lila-nota) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .td-docente { font-size: 7.5pt; width: 110px; }
+    .td-obs     { font-size: 7.5pt; }
+
+    tbody tr:nth-child(even) td:not(.td-area):not(.td-nota):not(.td-mat) {
+      background-color: #f9f5fd !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* ── BOTÓN IMPRIMIR ── */
+    #btn-imprimir {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: var(--violeta-oscuro);
+      color: white;
+      border: none;
+      padding: 13px 26px;
+      border-radius: 8px;
+      font-size: 12pt;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(109,59,142,0.4);
+      transition: background 0.2s;
+    }
+    #btn-imprimir:hover { background: var(--violeta-medio); }
+    @media print { #btn-imprimir { display: none !important; } }
+
+    /* ── PANTALLA DE CARGA ── */
+    #cargando {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      font-size: 14pt;
+      color: var(--violeta-oscuro);
+      gap: 16px;
+      z-index: 999;
+    }
+    .spinner {
+      width: 42px; height: 42px;
+      border: 4px solid var(--lila-area);
+      border-top-color: var(--violeta-oscuro);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div id="cargando">
+    <div class="spinner"></div>
+    <span>Cargando informe...</span>
+  </div>
+
+  <div id="contenido" style="display:none;"></div>
+
+  <button id="btn-imprimir" style="display:none;" onclick="window.print()">
+    🖨️ Imprimir / Guardar PDF
+  </button>
+
+  <script>
+    window.addEventListener('load', function() {
+      try {
+        var html = localStorage.getItem('sia_informe_html');
+
+        if (!html || html.trim() === '') {
+          document.getElementById('cargando').innerHTML =
+            '<p style="color:#c00;font-size:12pt;">⚠️ No hay datos de informe.<br>' +
+            '<span style="font-size:10pt;color:#666;">Generá el informe desde el sistema primero.</span></p>';
+          return;
+        }
+
+        var contenido = document.getElementById('contenido');
+        contenido.innerHTML = html;
+        contenido.style.display = 'block';
+
+        document.getElementById('cargando').style.display = 'none';
+        document.getElementById('btn-imprimir').style.display = 'block';
+
+        localStorage.removeItem('sia_informe_html');
+        localStorage.removeItem('sia_informe_ts');
+
+      } catch(e) {
+        document.getElementById('cargando').innerHTML =
+          '<p style="color:#c00;">Error al cargar: ' + e.message + '</p>';
+      }
+    });
+  </script>
+
+</body>
+</html>
