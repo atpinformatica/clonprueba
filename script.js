@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // SIA CPEM 32 - SCRIPT PRINCIPAL CON AUTENTICACIÓN Y ROLES
 // ============================================================
 
@@ -89,7 +89,9 @@ const areasPorMateria = {
     "MATEMATICA FINANCIERA": "MATEMATICA E INFORMATICA",
     "EDUCACION FISICA INTEGRAL": "EDUCACION FISICA INTEGRAL",
     "EDUCACION FISICA": "EDUCACION FISICA INTEGRAL",
+    "EDUCACION SEXUAL INTEGRAL": "INTERAREA EDUCACION SEXUAL INTEGRAL",
     "INTERAREA EDUCACION SEXUAL INTEGRAL": "INTERAREA EDUCACION SEXUAL INTEGRAL",
+    "INTEGRACION TECNOLOGICA": "INTERAREA TECNOLOGIA",
     "INTERAREA TECNOLOGIA": "INTERAREA TECNOLOGIA",
     "COMUNICACION Y MEDIOS": "COMUNICACION Y MEDIOS",
     "INVESTIGACION DE LAS ORIENTACIONES": "INVESTIGACION DE LAS ORIENTACIONES"
@@ -969,15 +971,38 @@ async function cargarAlumnos() {
             html += `</select></td>`;
         }
 
-        // Observaciones (siempre visible)
-        const valP = persistido['sel_1'] || "";
-        html += `<td><div style="display:flex; flex-direction:column; gap:3px; min-width: 180px;">
-                    <select class="nota-input select-obs-multiple" data-pos="1" style="font-size:0.85rem;${bgStyle}" ${disabledAttr} onchange="actualizarMemoria('${llaveID}', '${alumno.dni}', 'sel_1', this.value)">
-                        <option value="">Seleccione una frase...</option>
-                        ${frases.map(f => `<option value="${f}" ${valP===f?'selected':''}>${f}</option>`).join('')}
-                    </select>
-                    <textarea class="nota-input text-obs" placeholder="Nota personal..." style="height:40px;${bgStyle}" ${disabledAttr} onchange="actualizarMemoria('${llaveID}', '${alumno.dni}', 'observacion', this.value)">${persistido.observacion || ""}</textarea>
-                 </div></td>`;
+        // Observaciones
+        // Cuatrimestre: 3 desplegables de frases + textarea libre
+        // Bimestre: 1 desplegable + textarea libre
+        if (esCuatrimestre) {
+            const v1 = persistido['sel_1'] || "";
+            const v2 = persistido['sel_2'] || "";
+            const v3 = persistido['sel_3'] || "";
+            html += `<td><div style="display:flex; flex-direction:column; gap:4px; min-width: 200px;">
+                        <select class="nota-input select-obs-multiple" data-pos="1" style="font-size:0.82rem;${bgStyle}" ${disabledAttr} onchange="actualizarMemoria('${llaveID}', '${alumno.dni}', 'sel_1', this.value)">
+                            <option value="">Obs. 1...</option>
+                            ${frases.map(f => `<option value="${f}" ${v1===f?'selected':''}>${f}</option>`).join('')}
+                        </select>
+                        <select class="nota-input select-obs-multiple" data-pos="2" style="font-size:0.82rem;${bgStyle}" ${disabledAttr} onchange="actualizarMemoria('${llaveID}', '${alumno.dni}', 'sel_2', this.value)">
+                            <option value="">Obs. 2...</option>
+                            ${frases.map(f => `<option value="${f}" ${v2===f?'selected':''}>${f}</option>`).join('')}
+                        </select>
+                        <select class="nota-input select-obs-multiple" data-pos="3" style="font-size:0.82rem;${bgStyle}" ${disabledAttr} onchange="actualizarMemoria('${llaveID}', '${alumno.dni}', 'sel_3', this.value)">
+                            <option value="">Obs. 3...</option>
+                            ${frases.map(f => `<option value="${f}" ${v3===f?'selected':''}>${f}</option>`).join('')}
+                        </select>
+                        <textarea class="nota-input text-obs" placeholder="Nota personal..." style="height:40px;${bgStyle}" ${disabledAttr} onchange="actualizarMemoria('${llaveID}', '${alumno.dni}', 'observacion', this.value)">${persistido.observacion || ""}</textarea>
+                     </div></td>`;
+        } else {
+            const valP = persistido['sel_1'] || "";
+            html += `<td><div style="display:flex; flex-direction:column; gap:3px; min-width: 180px;">
+                        <select class="nota-input select-obs-multiple" data-pos="1" style="font-size:0.85rem;${bgStyle}" ${disabledAttr} onchange="actualizarMemoria('${llaveID}', '${alumno.dni}', 'sel_1', this.value)">
+                            <option value="">Seleccione una frase...</option>
+                            ${frases.map(f => `<option value="${f}" ${valP===f?'selected':''}>${f}</option>`).join('')}
+                        </select>
+                        <textarea class="nota-input text-obs" placeholder="Nota personal..." style="height:40px;${bgStyle}" ${disabledAttr} onchange="actualizarMemoria('${llaveID}', '${alumno.dni}', 'observacion', this.value)">${persistido.observacion || ""}</textarea>
+                     </div></td>`;
+        }
         
         tr.innerHTML = html;
         tbody.appendChild(tr);
@@ -3567,11 +3592,14 @@ async function generarInformes() {
     btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Generando PDF...`;
 
     const es4o5 = anioDesde(curso) >= 4;
+    const esBimestre = periodo.includes('Bimestre');
 
     // Generar UN SOLO HTML con todos los alumnos (una página por alumno con page-break)
     const paginasHTML = data.alumnos.map(alumno => {
       const notas = data.notasMap[alumno.nombre] || {};
-      return es4o5
+      // Para cursos 1-3, si es bimestre usar formato 4-5 (por materias con criterios cualitativos)
+      const usarFormato45 = es4o5 || (anioDesde(curso) >= 1 && anioDesde(curso) <= 3 && esBimestre);
+      return usarFormato45
         ? paginaInforme45(alumno, curso, turno, periodo, preceptor, notas, data.docenteMap)
         : paginaInforme13(alumno, curso, turno, periodo, preceptor, notas, data.docenteMap);
     }).join('\n');
@@ -3605,11 +3633,13 @@ function abrirInformeEnPestana(paginasHTML) {
 }
 
 // ── CABECERA COMÚN — usa clases de informe.html ──────────────
-function cabeceraHTML(alumno, curso, preceptor) {
+function cabeceraHTML(alumno, curso, preceptor, periodo) {
+  const esBimestre = periodo && periodo.includes('Bimestre');
+  const labelInforme = esBimestre ? 'Informe Bimestral 2026' : 'Informe Cuatrimestral 2026';
   return `<div class="cabecera">
     <div class="cab-cpem">
       <span class="titulo">CPEM N° 32</span>
-      <span class="subtitulo">Informe Cuatrimestral 2026</span>
+      <span class="subtitulo">${labelInforme}</span>
     </div>
     <div class="cab-nombre">${alumno.nombre}</div>
     <div class="cab-curso">${curso}</div>
@@ -3627,71 +3657,199 @@ function valorCelda(v) {
 }
 
 // ── PLANILLA 1°–3° AÑO ───────────────────────────────────────
+// Estructura por área:
+//   Fila 1..N  : Área(rowspan) | Materia | Docente | (vacío) | (vacío)
+//   Fila N+1   : (área ya con rowspan) | colspan=2 "Obs 1"  | obs1    | nota(rowspan4)
+//   Fila N+2   : (área ya con rowspan) | colspan=2 "Obs 2"  | obs2    |
+//   Fila N+3   : (área ya con rowspan) | colspan=2 "Obs 3"  | obs3    |
+//   Fila N+4   : (área ya con rowspan) | colspan=2 "Nota p."| notaP   |
+// La nota del área va en una celda con rowspan=4 al lado del informe cualitativo.
 function paginaInforme13(alumno, curso, turno, periodo, preceptor, notas, docenteMap) {
   const areas = AREAS_POR_CURSO[curso] || [];
   let filas = '';
+
+  // Para obtener nota/obs del área usamos la primera materia que tenga datos,
+  // o acumulamos todas las obs de las materias del área.
+  // En realidad, obs y nota del informe son del AREA (un único valor por área).
+  // Los guardamos bajo la clave del área en el notasMap — si no existe, buscamos en materias.
+  let areaIdx = 0;
   areas.forEach(({ area, materias }) => {
-    materias.forEach((mat, idx) => {
-      const n   = notas[mat] || notas[mat.toUpperCase()] || {};
+
+    // Buscar datos del área: primero directamente, luego en cualquier materia del área
+    let nArea = notas[area] || notas[area.toUpperCase()] || {};
+    if (!nArea.nota && !nArea.obs1) {
+      // Intentar encontrar datos en las materias del área
+      for (const mat of materias) {
+        const nm = notas[mat] || notas[mat.toUpperCase()] || {};
+        if (nm.nota || nm.obs1 || nm.sel_1) { nArea = nm; break; }
+      }
+    }
+    const obs1  = nArea.obs1 || nArea.sel_1 || '';
+    const obs2  = nArea.obs2 || nArea.sel_2 || '';
+    const obs3  = nArea.obs3 || nArea.sel_3 || '';
+    const obsP  = nArea.observacion || '';
+    const nota  = (nArea.nota || '').toString().trim();
+
+    // Una sola fila por area que contiene:
+    // - Columna izquierda: área (rowspan de materias)
+    // - Columna central: tabla interna con materias+docentes
+    // - Columna derecha: tabla interna con 4 renglones de obs (separados por líneas finas)
+    // - Columna nota: una sola celda por área
+    
+    // ── Tabla de materias ──
+    let filasMatHTML = materias.map(mat => {
       const doc = docenteMap[mat] || docenteMap[mat.toUpperCase()] || '';
-      const nota = (n.nota || '').toString().trim();
-      filas += `<tr>
-        ${idx === 0 ? `<td rowspan="${materias.length}" class="td-area">${area}</td>` : ''}
-        <td class="td-mat" style="width:170px;">${mat}</td>
-        <td class="td-docente">${doc}</td>
-        <td class="td-obs">${n.obs1 || ''}</td>
-        <td class="td-nota" style="width:48px;">${nota}</td>
+      return `<tr>
+        <td class="tc-mat">${mat}</td>
+        <td class="tc-doc">${doc}</td>
       </tr>`;
-    });
+    }).join('');
+
+    // ── Tabla de obs: siempre 4 renglones ──
+    let filasObsHTML = '';
+    if (obs1 !== undefined) filasObsHTML += `<tr><td class="tc-obs">${obs1}</td></tr>`;
+    if (obs2 !== undefined) filasObsHTML += `<tr><td class="tc-obs">${obs2}</td></tr>`;
+    if (obs3 !== undefined) filasObsHTML += `<tr><td class="tc-obs">${obs3}</td></tr>`;
+    filasObsHTML += `<tr><td class="tc-obs tc-obs-nota">${obsP}</td></tr>`;
+
+    filas += `<tr class="area-${areaIdx % 2 === 0 ? 'par' : 'impar'}">
+      <td class="td-area">${area}</td>
+      <td colspan="2" style="padding:0;vertical-align:middle;border-right:none;" class="td-mat-wrap">
+        <table class="t-mat">${filasMatHTML}</table>
+      </td>
+      <td style="padding:0;vertical-align:middle;">
+        <table class="t-obs">${filasObsHTML}</table>
+      </td>
+      <td class="td-nota">${nota}</td>
+    </tr>`;
+    areaIdx++;
   });
+
   return `<div class="pagina">
-    ${cabeceraHTML(alumno, curso, preceptor)}
-    <table>
+    <div class="marco-contenido">
+    ${cabeceraHTML(alumno, curso, preceptor, periodo)}
+    <table class="tabla-principal">
       <thead><tr>
         <th class="th-main" style="width:130px;">Área</th>
-        <th class="th-main" style="width:170px;">Asignaturas</th>
-        <th class="th-main" style="width:120px;">Docentes</th>
+        <th class="th-main" style="width:165px;">Asignaturas</th>
+        <th class="th-main" style="width:115px;">Docentes</th>
         <th class="th-main">Informe Cualitativo</th>
         <th class="th-main" style="width:48px;">NOTA</th>
       </tr></thead>
       <tbody>${filas}</tbody>
     </table>
+    </div>
+    <div class="firmas">
+      <div class="firma-item">Firma de la familia:</div>
+      <div class="firma-item">Firma del Equipo de Gobierno y Conducción Escolar:</div>
+    </div>
   </div>`;
 }
 
-// ── PLANILLA 4°–5° AÑO ───────────────────────────────────────
+// Materias por curso para informe bimestral 1-3 (espacios curriculares individuales)
+const MATERIAS_BIMESTRE_1_3 = {
+  "1 A": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","TEATRO","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "1 B": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","TEATRO","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "1 C": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","TEATRO","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "1 D": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","TEATRO","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "1 E": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","TEATRO","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "2 A": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","TEATRO","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "2 B": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","DANZA","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "2 C": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","DANZA","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "2 D": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","FILOSOFIA","LENGUA","LITERATURA","LENGUAS OTRAS","DANZA","MUSICA","ARTES VISUALES","BIOLOGIA","FISICO QUIMICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","EDUCACION SEXUAL INTEGRAL","INTEGRACION TECNOLOGICA"],
+  "3 A": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","LENGUA","LITERATURA","LENGUAS OTRAS","LENGUAS PREEXISTENTES","ARTES VISUALES","BIOLOGIA","QUIMICA","FISICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","INTEGRACION TECNOLOGICA","COMUNICACION Y MEDIOS","INVESTIGACION DE LAS ORIENTACIONES"],
+  "3 B": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","LENGUA","LITERATURA","LENGUAS OTRAS","LENGUAS PREEXISTENTES","ARTES VISUALES","BIOLOGIA","QUIMICA","FISICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","INTEGRACION TECNOLOGICA","COMUNICACION Y MEDIOS","INVESTIGACION DE LAS ORIENTACIONES"],
+  "3 C": ["HISTORIA","GEOGRAFIA","ECONOMIA","CONSTRUCCION DE CIUDADANIAS","LENGUA","LITERATURA","LENGUAS OTRAS","LENGUAS PREEXISTENTES","ARTES VISUALES","BIOLOGIA","QUIMICA","FISICA","MATEMATICA","INFORMATICA","EDUCACION FISICA INTEGRAL","INTEGRACION TECNOLOGICA","COMUNICACION Y MEDIOS","INVESTIGACION DE LAS ORIENTACIONES"]
+};
+
+// ── PLANILLA 4°–5° AÑO (y 1-3 bimestre) ────────────────────────
 function paginaInforme45(alumno, curso, turno, periodo, preceptor, notas, docenteMap) {
-  const materias = MATERIAS_4_5[curso] || [];
+  const anio = anioDesde(curso);
+  let materias;
+  if (anio >= 4) {
+    materias = MATERIAS_4_5[curso] || [];
+  } else {
+    // Para 1-3 año bimestre: usar espacios curriculares individuales
+    materias = MATERIAS_BIMESTRE_1_3[curso] || [];
+  }
+  const mostrarArea = anio >= 1 && anio <= 3;
   let filas = '';
-  materias.forEach(mat => {
-    const n   = notas[mat] || notas[mat.toUpperCase()] || {};
-    const doc = docenteMap[mat] || docenteMap[mat.toUpperCase()] || '';
-    const nota = (n.nota || '').toString().trim();
-    filas += `<tr>
-      <td class="td-mat" style="width:185px;">${mat}</td>
-      <td class="td-docente">${doc}</td>
-      ${valorCelda(n.interpreta)}
-      ${valorCelda(n.relaciona)}
-      ${valorCelda(n.aplica)}
-      ${valorCelda(n.participacion)}
-      ${valorCelda(n.autonomia)}
-      ${valorCelda(n.realizacion_tp)}
-      ${valorCelda(n.cumplimiento_aec)}
-      <td class="td-nota" style="width:44px;">${nota}</td>
-      <td class="td-obs">${n.obs1 || ''}</td>
-    </tr>`;
-  });
+
+  if (mostrarArea) {
+    // Agrupar materias por área; Obs1 y Nota personal son por área, no por materia
+    let i = 0;
+    let areaIdx = 0;
+    while (i < materias.length) {
+      const areaActual = areasPorMateria[materias[i]] || '';
+      let j = i;
+      while (j < materias.length && (areasPorMateria[materias[j]] || '') === areaActual) j++;
+      const count = j - i;
+
+      // Buscar obs1 y nota del área (primero por nombre de área, luego en primera materia)
+      let nArea = notas[areaActual] || notas[areaActual.toUpperCase()] || {};
+      if (!nArea.nota && !nArea.obs1) {
+        for (let k = i; k < j; k++) {
+          const nm = notas[materias[k]] || notas[materias[k].toUpperCase()] || {};
+          if (nm.nota || nm.obs1) { nArea = nm; break; }
+        }
+      }
+      const areaObs1 = nArea.obs1 || '';
+      const areaNota = (nArea.nota || '').toString().trim();
+
+      for (let k = i; k < j; k++) {
+        const mat = materias[k];
+        const n   = notas[mat] || notas[mat.toUpperCase()] || {};
+        const doc = docenteMap[mat] || docenteMap[mat.toUpperCase()] || '';
+        filas += `<tr class="area-${areaIdx % 2 === 0 ? 'par' : 'impar'}">
+          ${k === i ? `<td class="td-area-nombre" rowspan="${count}">${areaActual}</td>` : ''}
+          <td class="td-mat">${mat}</td>
+          <td class="td-docente">${doc}</td>
+          ${valorCelda(n.interpreta)}
+          ${valorCelda(n.relaciona)}
+          ${valorCelda(n.aplica)}
+          ${valorCelda(n.participacion)}
+          ${valorCelda(n.autonomia)}
+          ${valorCelda(n.realizacion_tp)}
+          ${valorCelda(n.cumplimiento_aec)}
+          ${k === i ? `<td class="td-nota" rowspan="${count}" style="width:44px;vertical-align:middle;">${areaNota}</td>` : ''}
+          ${k === i ? `<td class="td-obs" rowspan="${count}">${areaObs1}</td>` : ''}
+        </tr>`;
+      }
+      areaIdx++;
+    }
+  } else {
+    materias.forEach(mat => {
+      const n   = notas[mat] || notas[mat.toUpperCase()] || {};
+      const doc = docenteMap[mat] || docenteMap[mat.toUpperCase()] || '';
+      const nota = (n.nota || '').toString().trim();
+      filas += `<tr>
+        <td class="td-mat">${mat}</td>
+        <td class="td-docente">${doc}</td>
+        ${valorCelda(n.interpreta)}
+        ${valorCelda(n.relaciona)}
+        ${valorCelda(n.aplica)}
+        ${valorCelda(n.participacion)}
+        ${valorCelda(n.autonomia)}
+        ${valorCelda(n.realizacion_tp)}
+        ${valorCelda(n.cumplimiento_aec)}
+        <td class="td-nota" style="width:44px;">${nota}</td>
+        <td class="td-obs">${n.obs1 || ''}</td>
+      </tr>`;
+    });
+  }
   return `<div class="pagina">
-    ${cabeceraHTML(alumno, curso, preceptor)}
-    <table>
+    <div class="marco-contenido">
+    ${cabeceraHTML(alumno, curso, preceptor, periodo)}
+    <table class="tabla-principal">
       <thead>
         <tr>
-          <th class="th-main" rowspan="2" style="width:185px;">Espacio curricular</th>
+          ${mostrarArea ? '<th class="th-main" rowspan="2" style="width:115px;">Área</th>' : ''}
+          <th class="th-main" rowspan="2" style="width:${mostrarArea ? '150' : '185'}px;">Espacio curricular</th>
           <th class="th-main" rowspan="2" style="width:110px;">Docentes</th>
           <th class="th-main" colspan="3">Apropiación de conocimientos y saberes</th>
           <th class="th-main" colspan="3">Responsabilidad en su proceso de aprendizaje</th>
           <th class="th-main" rowspan="2" style="width:62px;">Cumplimiento de los AEC</th>
-          <th class="th-main" rowspan="2" style="width:44px;">Nota final</th>
+          <th class="th-main" rowspan="2" style="width:44px;">${mostrarArea ? 'Nota parcial' : 'Nota final'}</th>
           <th class="th-main" rowspan="2">Observaciones</th>
         </tr>
         <tr>
@@ -3705,5 +3863,10 @@ function paginaInforme45(alumno, curso, turno, periodo, preceptor, notas, docent
       </thead>
       <tbody>${filas}</tbody>
     </table>
+    </div>
+    <div class="firmas">
+      <div class="firma-item">Firma de la familia:</div>
+      <div class="firma-item">Firma del Equipo de Gobierno y Conducción Escolar:</div>
+    </div>
   </div>`;
 }
