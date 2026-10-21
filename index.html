@@ -10,6 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <base target="_blank">
 </head>
@@ -31,8 +32,16 @@
             
             <p id="login-error"></p>
             <p class="login-footer">Sistema de gestion academica</p>
-        </div>
     </div>
+</div>
+
+<!-- ===================== LOADING OVERLAY ===================== -->
+<div id="loading-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center; flex-direction:column;">
+    <div style="background:#E67E22; color:#fff; padding:30px 50px; border-radius:12px; font-size:1.4rem; font-weight:bold; box-shadow:0 4px 20px rgba(0,0,0,0.3); text-align:center;">
+        <i class="fas fa-spinner fa-spin" style="font-size:2rem; display:block; margin-bottom:15px;"></i>
+        Aguarde un momento Cargando Sistema
+    </div>
+</div>
 
     <!-- ===================== APP PRINCIPAL ===================== -->
     <main id="app-main" class="content full-width" style="display:none;">
@@ -123,8 +132,8 @@
             <section class="table-container">
                 <!-- Loader de carga -->
                 <div id="loader-tabla" style="display:none; text-align:center; padding:40px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#0056b3;"></i>
-                    <p style="margin-top:10px; color:#555; font-size:1rem;">Cargando Listado...</p>
+                    <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#E67E22;"></i>
+                    <p style="margin-top:10px; color:#E67E22; font-size:1rem; font-weight:bold;">Cargando información...</p>
                 </div>
                 
                 <table id="tabla-notas">
@@ -158,6 +167,9 @@
                         <div id="progress-bar" style="background:#28a745; height:100%; width:0%; transition:width 0.3s ease;"></div>
                     </div>
                     <p id="progress-text" style="font-size:0.75rem; color:#555; margin-top:4px; text-align:center;">Enviando datos...</p>
+                    <p id="cola-status" style="font-size:0.75rem; color:#856404; margin-top:2px; text-align:center; display:none;">
+                        <i class="fas fa-clock"></i> <span id="cola-texto">En fila para ser cargado...</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -186,25 +198,73 @@
                 </div>
             </div>
 
+            <!-- CONFIGURACION DE FRASES POR AÑO / ÁREA -->
+            <div class="frases-section" style="background:#e8f4f8; border:1px solid #5bc0de; border-radius:8px; padding:15px; margin:15px 0;">
+                <h4 style="margin:0 0 10px 0; color:#31708f;"><i class="fas fa-comment-dots"></i> Frases por Año / Área</h4>
+                <p style="font-size:0.85rem; color:#31708f; margin-bottom:10px;">Configure las frases de los 3 desplegables para cada año y área. Cada desplegable (Frase 1, Frase 2, Frase 3) puede tener su propia lista. Separe las frases con <code>*</code> (asterisco).</p>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:end; margin-bottom:10px;">
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <label style="font-size:0.75rem; color:#666;">Año:</label>
+                        <select id="frases-anio" style="padding:8px 12px; border-radius:4px; border:1px solid #ced4da;" onchange="actualizarSelectorCursosFrases()">
+                            <option value="1">1°</option>
+                            <option value="2">2°</option>
+                            <option value="3">3°</option>
+                            <option value="4">4°</option>
+                            <option value="5">5°</option>
+                        </select>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <label style="font-size:0.75rem; color:#666;">Curso:</label>
+                        <select id="frases-curso" style="padding:8px 12px; border-radius:4px; border:1px solid #ced4da;" onchange="filtrarListaAreas()">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:2px; position:relative;">
+                        <label style="font-size:0.75rem; color:#666;">Área:</label>
+                        <div id="frases-area-wrapper" style="position:relative; width:220px;">
+                            <input type="text" id="frases-area" placeholder="Buscar área..." style="width:100%; padding:8px 12px; border-radius:4px; border:1px solid #ced4da; box-sizing:border-box;" onfocus="mostrarListaAreas()" oninput="filtrarListaAreas()" autocomplete="off">
+                            <div id="frases-area-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; max-height:200px; overflow-y:auto; background:white; border:1px solid #ced4da; border-radius:4px; z-index:1000; box-shadow:0 4px 8px rgba(0,0,0,0.1);"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:200px;">
+                        <label style="font-size:0.75rem; color:#666; display:block; margin-bottom:3px;">Frase 1 (1er Cuatrimestre):</label>
+                        <textarea id="frases-1" rows="3" style="width:100%; padding:6px; border-radius:4px; border:1px solid #ced4da; font-size:0.85rem;" placeholder="Ej: Muy bueno * Bueno * Regular * Malo"></textarea>
+                    </div>
+                    <div style="flex:1; min-width:200px;">
+                        <label style="font-size:0.75rem; color:#666; display:block; margin-bottom:3px;">Frase 2 (2do Cuatrimestre):</label>
+                        <textarea id="frases-2" rows="3" style="width:100%; padding:6px; border-radius:4px; border:1px solid #ced4da; font-size:0.85rem;" placeholder="Ej: Muy bueno * Bueno * Regular * Malo"></textarea>
+                    </div>
+                    <div style="flex:1; min-width:200px;">
+                        <label style="font-size:0.75rem; color:#666; display:block; margin-bottom:3px;">Frase 3 (3er Cuatrimestre):</label>
+                        <textarea id="frases-3" rows="3" style="width:100%; padding:6px; border-radius:4px; border:1px solid #ced4da; font-size:0.85rem;" placeholder="Ej: Muy bueno * Bueno * Regular * Malo"></textarea>
+                    </div>
+                </div>
+                <div style="margin-top:10px;">
+                    <button class="btn-save" onclick="cargarFrasesAnioArea()" style="background:#5bc0de;">
+                        <i class="fas fa-search"></i> Cargar
+                    </button>
+                    <button class="btn-save" onclick="guardarFrasesAnioArea()" style="background:#28a745;">
+                        <i class="fas fa-save"></i> Guardar Frases
+                    </button>
+                    <span id="msg-frases" style="margin-left:10px; font-size:0.85rem;"></span>
+                </div>
+            </div>
+
             <!-- DESCARGA DE LIBROS ESCOLARES -->
             <div class="libros-section" style="background:#f8f9fa; border:1px solid #dee2e6; border-radius:8px; padding:15px; margin:15px 0;">
                 <h4 style="margin:0 0 10px 0; color:#495057;"><i class="fas fa-book-open"></i> Descarga de Libros Escolares</h4>
                 <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                    <!-- Selector de Año -->
-                    <div style="display:flex; flex-direction:column; gap:2px;">
-                        <label style="font-size:0.75rem; color:#666;">Año:</label>
-                        <input type="number" id="input-anio-libro" value="2025" min="2020" max="2030" 
-                               style="padding:8px 12px; border-radius:4px; border:1px solid #ced4da; width:80px;">
-                    </div>
-                    
                     <!-- Selector de Período -->
                     <div style="display:flex; flex-direction:column; gap:2px;">
                         <label style="font-size:0.75rem; color:#666;">Periodo:</label>
                         <select id="select-periodo-libro" style="padding:8px 12px; border-radius:4px; border:1px solid #ced4da;">
-                            <option value="1_Bimestre">1er Bimestre</option>
-                            <option value="2_Bimestre">2do Bimestre</option>
-                            <option value="1">1er Cuatrimestre</option>
-                            <option value="2">2do Cuatrimestre</option>
+                            <option value="">Seleccione Período</option>
+                            <option value="1er Cuatrimestre">1er Cuatrimestre</option>
+                            <option value="2do Cuatrimestre">2do Cuatrimestre</option>
+                            <option value="1er Bimestre">1er Bimestre</option>
+                            <option value="2do Bimestre">2do Bimestre</option>
                         </select>
                     </div>
                     
@@ -233,13 +293,33 @@
                             <option value="5 C">5 C</option>
                         </select>
                     </div>
+
+                    <!-- Selector de Turno -->
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <label style="font-size:0.75rem; color:#666;">Turno:</label>
+                        <select id="select-turno-libro" style="padding:8px 12px; border-radius:4px; border:1px solid #ced4da;">
+                            <option value="">Todos los turnos</option>
+                            <option value="MAÑANA">MAÑANA</option>
+                            <option value="TARDE">TARDE</option>
+                        </select>
+                    </div>
+
+                    <!-- Selector de Año -->
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <label style="font-size:0.75rem; color:#666;">Año:</label>
+                        <input type="number" id="input-anio-libro" value="2026" min="2020" max="2030"
+                               style="padding:8px 12px; border-radius:4px; border:1px solid #ced4da; width:80px;">
+                    </div>
                     
-                    <button class="btn-comprobante" onclick="descargarLibroPorCurso()" style="margin-right:0; margin-top:18px;">
+                    <button class="btn-add-user" onclick="descargarLibroPorCurso()" style="background:#7b3f9e;">
                         <i class="fas fa-file-pdf"></i> Descargar libro por curso
                     </button>
-                    <button class="btn-comprobante" onclick="descargarLibroTodosCursos()" style="margin-right:0; background:#17a2b8; margin-top:18px;">
+                    <button class="btn-add-user" onclick="descargarLibroTodosCursos()" style="background:#7b3f9e;">
                         <i class="fas fa-file-pdf"></i> Descargar libro de todos los cursos
                     </button>
+                    <span id="spinner-libro" style="display:none; margin-top:18px; color:#17a2b8; font-size:0.85rem;">
+                        <i class="fas fa-spinner fa-spin"></i> Generando informes...
+                    </span>
                 </div>
             </div>
 
@@ -250,13 +330,12 @@
                             <th>Correo</th>
                             <th>Rol</th>
                             <th id="th-materias-turno">Materias Asignadas</th>
-                            <th>Cursos Asignados</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-usuarios">
-                        <tr><td colspan="6" style="padding:20px;text-align:center;color:#777;">Cargando usuarios...</td></tr>
+                        <tr><td colspan="5" style="padding:20px;text-align:center;color:#777;">Cargando usuarios...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -288,13 +367,14 @@
                             <tr>
                                 <th>N°</th>
                                 <th>Correo Institucional</th>
+                                <th>Rol</th>
                                 <th>Turno</th>
                                 <th>Curso</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tbody-preceptores">
-                            <tr><td colspan="5" style="padding:20px;text-align:center;color:#777;">Cargando preceptores...</td></tr>
+                            <tr><td colspan="6" style="padding:20px;text-align:center;color:#777;">Cargando preceptores...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -308,6 +388,9 @@
                 </button>
                 <button class="btn-add-user" onclick="mostrarModalAgregarRecursante()" style="background:#17a2b8; margin-left:10px;">
                     <i class="fas fa-user-graduate"></i> Agregar Recursante
+                </button>
+                <button class="btn-add-user" onclick="mostrarModalCargaMasiva()" style="background:#28a745; margin-left:10px;">
+                    <i class="fas fa-users"></i> Carga Masiva
                 </button>
                 <button class="btn-add-user" onclick="mostrarModalInforme()" style="background:#7b3f9e; margin-left:10px;" id="btn-modal-informe">
                     <i class="fas fa-file-alt"></i> Generar Informes
@@ -350,7 +433,7 @@
                     </div>
                     <div class="filter-group">
                         <label>Buscar</label>
-                        <input type="text" id="buscar-alumno" placeholder="Nombre o DNI" oninput="filtrarAlumnos()">
+                        <input type="text" id="buscar-alumno" placeholder="Nombre o Nro. Orden" oninput="filtrarAlumnos()">
                     </div>
                 </div>
             </div>
@@ -359,12 +442,13 @@
                 <table id="tabla-alumnos-gestion">
                     <thead>
                         <tr>
-                            <th>N°</th>
+                            <th>Nro. Orden</th>
                             <th>Apellido y Nombre</th>
                             <th>Curso</th>
                             <th>Turno</th>
                             <th>Materia (Recursante)</th>
                             <th>Acciones</th>
+                            <th>ECAP</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-alumnos-gestion">
@@ -397,7 +481,7 @@
 
     <!-- ===================== MODAL AGREGAR USUARIO ===================== -->
     <div id="modal-agregar" class="modal-overlay" style="display:none;">
-        <div class="modal-content">
+        <div class="modal-content modal-content-usuarios">
             <div class="modal-header">
                 <h3><i class="fas fa-user-plus"></i> Agregar Usuario</h3>
                 <button class="modal-close" onclick="cerrarModal('modal-agregar')">&times;</button>
@@ -413,7 +497,7 @@
                 </div>
                 <div class="form-group">
                     <label>Rol</label>
-                    <select id="nuevo-rol">
+                    <select id="nuevo-rol" onchange="cambiarTipoNuevoRol()">
                         <option value="docente">Docente</option>
                         <option value="admin">Administrador</option>
                         <option value="jefe_preceptor">Jefe de Preceptor</option>
@@ -422,12 +506,9 @@
                     </select>
                 </div>
                 <div class="form-group" id="grupo-materias-nuevas">
-                    <label>Materias permitidas</label>
+                    <label id="label-materias-nuevas">Materias permitidas (Curso → Materia)</label>
+                    <input type="text" class="filtro-materias" placeholder="Buscar materia..." oninput="filtrarMaterias(this)" id="filtro-materias-nuevas">
                     <div id="materias-multiselect" class="materias-checklist"></div>
-                </div>
-                <div class="form-group" id="grupo-cursos-nuevos">
-                    <label>Cursos permitidos</label>
-                    <div id="cursos-multiselect" class="materias-checklist"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -445,12 +526,11 @@
                 <button class="modal-close" onclick="cerrarModal('modal-materias')">&times;</button>
             </div>
             <div class="modal-body">
-                <p id="editar-materias-usuario" style="font-weight:bold; margin-bottom:10px;"></p>
+                <label style="font-weight:bold; display:block; margin-bottom:4px;">Correo del docente</label>
+                <input type="email" id="editar-correo-input" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px; margin-bottom:12px; font-size:0.9rem;">
                 <label>Materias permitidas</label>
+                <input type="text" class="filtro-materias" placeholder="Buscar materia..." oninput="filtrarMaterias(this)">
                 <div id="materias-editar-checklist" class="materias-checklist"></div>
-                <hr style="margin:15px 0;">
-                <label>Cursos permitidos</label>
-                <div id="cursos-editar-checklist" class="materias-checklist"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="cerrarModal('modal-materias')">Cancelar</button>
@@ -500,8 +580,8 @@
                     <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Perez, Juan">
                 </div>
                 <div class="form-group">
-                    <label>DNI</label>
-                    <input type="text" id="nuevo-alumno-dni" placeholder="Ej: 12345678">
+                    <label>Nro. Orden</label>
+                    <input type="text" id="nuevo-alumno-dni" placeholder="Ej: 1, 2, 3...">
                 </div>
                 <div class="form-group">
                     <label>Curso</label>
@@ -538,38 +618,22 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="cerrarModal('modal-agregar-alumno')">Cancelar</button>
-                <button class="btn-confirm" onclick="confirmarGuardarAlumno()">Guardar</button>
+                <button class="btn-confirm" id="btn-guardar-alumno" onclick="confirmarGuardarAlumno()"><i class="fas fa-spinner fa-spin" id="spinner-guardar-alumno" style="display:none"></i> <span id="texto-guardar-alumno">Guardar</span></button>
             </div>
         </div>
     </div>
 
-    <!-- ===================== MODAL AGREGAR PRECEPTOR ===================== -->
-    <div id="modal-agregar-preceptor" class="modal-overlay" style="display:none;">
+    <!-- ===================== MODAL CARGA MASIVA ===================== -->
+    <div id="modal-carga-masiva" class="modal-overlay" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-shield"></i> Agregar Preceptor</h3>
-                <button class="modal-close" onclick="cerrarModal('modal-agregar-preceptor')">&times;</button>
+                <h3><i class="fas fa-users"></i> Carga Masiva de Alumnos</h3>
+                <button class="modal-close" onclick="cerrarModal('modal-carga-masiva')">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Correo Institucional</label>
-                    <input type="text" id="preceptor-correo" placeholder="nombre.apellido@cpem32.edu.ar">
-                </div>
-                <div class="form-group">
-                    <label>Contrasena inicial</label>
-                    <input type="password" id="preceptor-password" placeholder="Minimo 4 caracteres">
-                </div>
-                <div class="form-group">
-                    <label>Turno</label>
-                    <select id="preceptor-turno">
-                        <option value="">Seleccione Turno</option>
-                        <option value="MAÑANA">MAÑANA</option>
-                        <option value="TARDE">TARDE</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label>Curso</label>
-                    <select id="preceptor-curso">
+                    <select id="cm-curso">
                         <option value="">Seleccione Curso</option>
                         <option value="1 A">1 A</option>
                         <option value="1 B">1 B</option>
@@ -591,10 +655,62 @@
                         <option value="5 C">5 C</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>Turno</label>
+                    <select id="cm-turno">
+                        <option value="">Seleccione Turno</option>
+                        <option value="MAÑANA">MAÑANA</option>
+                        <option value="TARDE">TARDE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nro. Orden inicial <small>(opcional, por defecto continúa desde el último)</small></label>
+                    <input type="number" id="cm-dni-inicio" placeholder="Ej: 1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Apellido y Nombre de cada alumno <small>(uno por línea)</small></label>
+                    <textarea id="cm-lista-nombres" rows="12" placeholder="Perez, Juan&#10;Garcia, Maria&#10;Lopez, Carlos&#10;..." style="width:100%;resize:vertical;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="cerrarModal('modal-carga-masiva')">Cancelar</button>
+                <button class="btn-confirm" onclick="confirmarCargaMasiva()">Cargar Alumnos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL AGREGAR/EDITAR PRECEPTOR ===================== -->
+    <div id="modal-agregar-preceptor" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-shield"></i> <span id="preceptor-modal-titulo">Agregar Preceptor</span></h3>
+                <button class="modal-close" onclick="cerrarModal('modal-agregar-preceptor')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="preceptor-correo-original" value="">
+                <div class="form-group">
+                    <label>Correo Institucional</label>
+                    <input type="text" id="preceptor-correo" placeholder="nombre.apellido@cpem32.edu.ar">
+                </div>
+                <div class="form-group">
+                    <label>Contrasena <span id="preceptor-pass-label">inicial</span></label>
+                    <input type="password" id="preceptor-password" placeholder="Minimo 4 caracteres">
+                </div>
+                <div class="form-group">
+                    <label>Turnos asignados</label>
+                    <div id="preceptor-turnos" class="materias-checklist">
+                        <label class="check-item"><input type="checkbox" value="MAÑANA"> MAÑANA</label>
+                        <label class="check-item"><input type="checkbox" value="TARDE"> TARDE</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cursos asignados</label>
+                    <div id="preceptor-cursos" class="materias-checklist"></div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="cerrarModal('modal-agregar-preceptor')">Cancelar</button>
-                <button class="btn-confirm" onclick="confirmarAgregarPreceptor()">Guardar Preceptor</button>
+                <button class="btn-confirm" id="preceptor-modal-btn" onclick="confirmarAgregarPreceptor()">Guardar Preceptor</button>
             </div>
         </div>
     </div>
@@ -603,10 +719,12 @@
     <div id="modal-agregar-recursante" class="modal-overlay" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-graduate"></i> Agregar Recursante</h3>
+                <h3><i class="fas fa-user-graduate"></i> <span id="recursante-modal-titulo">Agregar Recursante</span></h3>
                 <button class="modal-close" onclick="cerrarModal('modal-agregar-recursante')">&times;</button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="recursante-dni">
+                <input type="hidden" id="recursante-modo" value="agregar">
                 <div class="form-group">
                     <label>Apellido y Nombre</label>
                     <input type="text" id="recursante-nombre" placeholder="Ej: Perez, Juan">
@@ -636,10 +754,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Materia</label>
-                    <select id="recursante-materia">
-                        <option value="">Seleccione Curso primero</option>
-                    </select>
+                    <label>Materias (puede seleccionar varias)</label>
+                    <div id="recursante-materias-container" style="max-height:180px;overflow-y:auto;border:1px solid #ddd;border-radius:6px;padding:8px;background:#fafafa;"></div>
                 </div>
                 <div class="form-group">
                     <label>Turno</label>
@@ -652,7 +768,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="cerrarModal('modal-agregar-recursante')">Cancelar</button>
-                <button class="btn-confirm" onclick="confirmarAgregarRecursante()">Guardar Recursante</button>
+                <button class="btn-confirm" onclick="confirmarGuardarRecursante()">Guardar Recursante</button>
             </div>
         </div>
     </div>
@@ -697,7 +813,13 @@
       <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
         <button onclick="cerrarModalInforme()" style="padding:10px 20px;border:1px solid #ddd;border-radius:6px;background:white;cursor:pointer;">Cancelar</button>
         <button id="btn-generar-informes" onclick="generarInformes()" style="padding:10px 20px;background:#0056b3;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">
-          <i class="fas fa-file-pdf"></i> Generar Informes PDF
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button id="btn-generar-planilla" onclick="generarPlanillaInformes()" style="padding:10px 20px;background:#1a73e8;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">
+          <i class="fas fa-file-alt"></i> Planilla
+        </button>
+        <button id="btn-generar-planilla-sc" onclick="generarPlanillaInformes(true)" style="padding:10px 20px;background:#555;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">
+          <i class="fas fa-file-alt"></i> Planilla sin color
         </button>
       </div>
     </div>
