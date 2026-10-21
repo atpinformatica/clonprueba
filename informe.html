@@ -15,7 +15,7 @@
       --texto-area:     #3d1f5a;
     }
 
-    @page { size: A4 landscape; margin: 8mm 8mm 12mm 8mm; }
+    @page { size: A4 landscape; margin: 10mm 2mm; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
@@ -23,13 +23,19 @@
       print-color-adjust: exact !important;
       color-adjust: exact !important;
       font-family: 'Segoe UI', Arial, sans-serif;
-      font-size: 8.5pt;
+      font-size: 8pt;
       color: #222;
       background: white;
     }
 
-    .pagina { page-break-after: always; }
-    .marco-contenido { border: 5px solid var(--violeta-oscuro); border-radius: 4px; padding: 8px; }
+    .pagina {
+      page-break-after: always;
+      width: 1107px;
+      height: 718px;
+      overflow: hidden;
+      position: relative;
+    }
+    .marco-contenido { border: 5px solid var(--violeta-oscuro); border-radius: 4px; padding: 6px; }
     .pagina:last-child { page-break-after: avoid; }
 
     /* ── CABECERA ── */
@@ -37,7 +43,7 @@
       display: grid;
       grid-template-columns: 155px 1fr 68px 210px;
       border: 1.5px solid var(--borde);
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       border-radius: 3px;
       overflow: hidden;
     }
@@ -47,27 +53,27 @@
       print-color-adjust: exact !important;
       color: white !important;
       text-align: center;
-      padding: 7px 5px;
+      padding: 5px 4px;
       display: flex; flex-direction: column; justify-content: center;
     }
-    .cab-cpem .titulo    { font-size: 11pt; font-weight: 700; }
-    .cab-cpem .subtitulo { font-size: 7.5pt; font-weight: 400; margin-top: 2px; opacity: .9; }
+    .cab-cpem .titulo    { font-size: 10pt; font-weight: 700; }
+    .cab-cpem .subtitulo { font-size: 7pt; font-weight: 400; margin-top: 1px; opacity: .9; }
     .cab-nombre {
-      padding: 0 12px; display: flex; align-items: center;
-      font-size: 13.5pt; font-weight: 700; letter-spacing: 0.3px;
+      padding: 0 10px; display: flex; align-items: center;
+      font-size: 12pt; font-weight: 700; letter-spacing: 0.3px;
       border-left: 1.5px solid var(--borde); border-right: 1.5px solid var(--borde);
       background-color: var(--lila-cab) !important;
       -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
     }
     .cab-curso {
       display: flex; align-items: center; justify-content: center;
-      font-size: 14pt; font-weight: 700;
+      font-size: 13pt; font-weight: 700;
       background-color: var(--lila-nota) !important;
       -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
       border-right: 1.5px solid var(--borde); color: var(--texto-area);
     }
     .cab-prece {
-      padding: 5px 10px; display: flex; flex-direction: column; justify-content: center;
+      padding: 3px 8px; display: flex; flex-direction: column; justify-content: center;
       background-color: var(--lila-cab) !important;
       -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
     }
@@ -81,78 +87,87 @@
     }
     table.tabla-principal th, table.tabla-principal > tbody > tr > td {
       border: 1px solid var(--borde);
-      padding: 3px 5px; vertical-align: middle;
+      padding: 2px 4px; vertical-align: middle;
+      word-wrap: break-word; overflow-wrap: break-word;
     }
     .th-main {
       background-color: var(--violeta-oscuro) !important;
       -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-      color: white !important; font-size: 7.5pt; font-weight: 600; text-align: center;
+      color: white !important; font-size: 7pt; font-weight: 600; text-align: center;
+      vertical-align: middle;
     }
     .th-sub {
       background-color: var(--violeta-medio) !important;
       -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-      color: white !important; font-size: 7pt; font-weight: 600; text-align: center;
+      color: white !important; font-size: 6.5pt; font-weight: 600; text-align: center;
     }
     .td-area {
       background-color: var(--lila-area) !important;
       -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-      font-weight: 700; font-size: 7.5pt; text-align: center;
-      color: var(--texto-area); width: 130px; vertical-align: middle;
+      font-weight: 700; font-size: 7pt; text-align: center;
+      color: var(--texto-area); width: 115px; vertical-align: middle;
     }
     .td-nota {
-      text-align: center; font-weight: 700; font-size: 9pt; width: 48px;
+      text-align: center; font-weight: 700; font-size: 8.5pt; width: 42px;
       background-color: var(--lila-nota) !important;
       -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
       vertical-align: middle;
     }
-    .td-val { text-align: center; font-size: 8pt; color: #888; }
+    .td-val { text-align: center; font-size: 7.5pt; color: #888; }
     .td-val.tiene-valor { color: #222; font-weight: 600; }
-    .td-docente { font-size: 7.5pt; }
-    .td-obs { font-size: 7.5pt; }
-    .td-mat-wrap {
-      background-color: var(--lila-mat) !important;
+    .td-docente { font-size: 7pt; vertical-align: middle; }
+    .td-obs { font-size: 7.5pt; line-height: 1.3; padding: 3px 5px; }
+    .tr-area td {
+      background-color: var(--lila-area) !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
+      font-weight: 700; font-size: 7.5pt; padding: 4px 8px;
+      color: var(--texto-area); text-align: left;
+      border-bottom: 1.5px solid var(--borde);
+    }
+    .td-area-nombre {
+      background-color: var(--lila-area) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      font-weight: 700; font-size: 7pt; text-align: center;
+      color: var(--texto-area); vertical-align: middle;
     }
 
-    /* ── TABLAS INTERNAS (materias y obs) — SIN herencia de estilos de tabla-principal ── */
+    /* ── TABLAS INTERNAS (materias y obs) ── */
     table.t-mat, table.t-obs {
       width: 100%; border-collapse: collapse; margin: 0;
       table-layout: fixed;
-      /* Importante: sin borde propio, lo da la celda contenedora */
       border: none !important;
     }
-    /* Las filas de tabla interna NO heredan nth-child ni bordes de tabla-principal */
     table.t-mat tr td, table.t-obs tr td {
       border: none !important;
       padding: 0;
     }
-    /* Celda de materia real */
     .tc-mat {
-      padding: 3px 5px !important;
+      padding: 2px 4px !important;
       border-bottom: 1px solid var(--borde) !important;
-      font-size: 8pt;
+      font-size: 7.5pt;
       vertical-align: middle;
       background-color: var(--lila-mat) !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
+      width: 59%;
     }
-    /* Celda de docente real */
     .tc-doc {
-      padding: 3px 5px !important;
+      padding: 2px 4px !important;
       border-bottom: 1px solid var(--borde) !important;
       border-left: 1px solid var(--borde) !important;
-      font-size: 7.5pt;
+      font-size: 7pt;
       vertical-align: middle;
+      width: 41%;
     }
-    /* Celda de obs real */
     .tc-obs {
-      padding: 3px 6px !important;
+      padding: 2px 5px !important;
       border-bottom: 1.5px solid var(--borde) !important;
-      font-size: 7.5pt;
+      font-size: 7pt;
       vertical-align: middle;
-      height: 18px;
-      min-height: 18px;
+      height: 16px;
+      min-height: 16px;
     }
     .tc-obs-nota {
       font-weight: 600;
@@ -167,19 +182,12 @@
     /* ── FIRMAS ── */
     .firmas {
       display: flex; justify-content: space-between;
-      margin-top: 70px; padding: 0 20px;
+      margin-top: 39px; padding: 0 10px;
     }
     .firma-item {
       font-size: 9pt; font-weight: 600; color: var(--texto-area);
       border-top: 1.5px solid var(--texto-area);
       padding-top: 6px; min-width: 200px; text-align: center;
-    }
-    .td-area-nombre {
-      background-color: var(--lila-area) !important;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      font-weight: 700; font-size: 7.5pt; text-align: center;
-      color: var(--texto-area); vertical-align: middle;
     }
 
     /* ── ALTERNAR COLORES POR ÁREA ── */
@@ -191,7 +199,6 @@
     table.tabla-principal tbody tr.area-impar td {
       background-color: #ffffff !important;
     }
-    /* Alternar también tablas internas de asignaturas */
     table.tabla-principal tbody tr.area-par .tc-mat,
     table.tabla-principal tbody tr.area-par .tc-doc {
       background-color: #e0d2ed !important;
@@ -248,7 +255,7 @@
         if (!html || html.trim() === '') {
           document.getElementById('cargando').innerHTML =
             '<p style="color:#c00;font-size:12pt;">⚠️ No hay datos de informe.<br>' +
-            '<span style="font-size:10pt;color:#666;">Generá el informe desde el sistema primero.</span></p>';
+            '<span style="color:#666;font-size:10pt;">Generá el informe desde el sistema primero.</span></p>';
           return;
         }
         var contenido = document.getElementById('contenido');
@@ -258,11 +265,35 @@
         document.getElementById('btn-imprimir').style.display = 'block';
         localStorage.removeItem('sia_informe_html');
         localStorage.removeItem('sia_informe_ts');
+
+        autoFitPaginas();
       } catch(e) {
         document.getElementById('cargando').innerHTML =
           '<p style="color:#c00;">Error al cargar: ' + e.message + '</p>';
       }
     });
+
+    function autoFitPaginas() {
+      var paginas = document.querySelectorAll('.pagina');
+      if (!paginas.length) return;
+      var pageW = 1107, pageH = 718;
+      var MIN_SCALE = 0.5;
+
+      paginas.forEach(function(pag) {
+        pag.style.transform = 'none';
+        pag.style.transformOrigin = '';
+        void pag.offsetHeight;
+
+        var h = pag.scrollHeight;
+        var s = Math.min(pageH / h, 1);
+        if (s < MIN_SCALE) s = MIN_SCALE;
+
+        if (s < 1) {
+          pag.style.transformOrigin = 'top left';
+          pag.style.transform = 'scale(' + s + ')';
+        }
+      });
+    }
   </script>
 </body>
 </html>
